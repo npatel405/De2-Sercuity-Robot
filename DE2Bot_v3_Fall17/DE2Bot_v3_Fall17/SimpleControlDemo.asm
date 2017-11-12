@@ -5,7 +5,6 @@
 
 ORG 0                  ; Jump table is located in mem 0-4
 ; This code uses the timer interrupt for the control code.
-	JUMP	MAIN_STATE_MACHINE_LOOP
 	JUMP   Init        ; Reset vector
 	RETI               ; Sonar interrupt (unused)
 	JUMP   CTimer_ISR  ; Timer interrupt
@@ -146,9 +145,14 @@ CALL_STATE_NE_CCW:
 EXE_STATE_START:
 	LOAD 	CURRENT_STATE
 	OUT 	SSEG1
-	LOAD	NUM_STATE_NW_CCW   ;;THIS IS HOW YOU TRANSITION STATES
+	
+	LOAD    TWO
+	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
+	CALL    MOVE_SECONDS
+	
+	LOAD	NUM_STATE_NW_CCW   ;;	Currently transitioning unconditionally
 	STORE	CURRENT_STATE	
-	CALL Wait1
+	CALL 	Wait1
 	RETURN
 EXE_STATE_NW_CCW:
 	LOAD CURRENT_STATE
@@ -193,8 +197,61 @@ EXE_STATE_NE_CCW:
 	CALL Wait1
 	RETURN
 	
+;;In order to call this subroutine, the number of seconds to move must be stored in NUM_MOVE_SECONDS
+MOVE_SECONDS:
+	MAIN_MOVE_SECONDS:
+		LOAD 	NUM_MOVE_SECONDS	
+		OUT		SSEG1	
+		JZERO 	MAIN_MOVE_EXIT		;check to see if we are done moving
+									;keep moving
+		
+		LOAD	fMid
+		STORE 	dVel
+		OUT		TIMER				;reset the timer
+	MAIN_MOVE_TIMER_1:
+		IN 		TIMER
+		ADDI 	-3
+		JNEG 	MAIN_MOVE_TIMER_1
+		
+		LOAD	fMid
+		STORE 	dVel
+		OUT		TIMER
+	MAIN_MOVE_TIMER_2:
+		IN 		TIMER
+		ADDI 	-3
+		JNEG 	MAIN_MOVE_TIMER_2
+	
+		LOAD	fMid
+		STORE 	dVel
+		OUT		TIMER
+	MAIN_MOVE_TIMER_3:
+		IN 		TIMER
+		ADDI 	-3
+		JNEG 	MAIN_MOVE_TIMER_3
+		
+		LOAD	fMid
+		STORE 	dVel
+		OUT		TIMER
+	MAIN_MOVE_TIMER_4:
+		IN 		TIMER
+		ADDI 	-1
+		JNEG 	MAIN_MOVE_TIMER_4
+	
+	LOAD	NUM_MOVE_SECONDS
+	ADDI 	-1
+	STORE	NUM_MOVE_SECONDS
+	JUMP	MAIN_MOVE_SECONDS
+	
+	MAIN_MOVE_EXIT:
+		LOAD	ZERO
+		STORE 	dVel
+		RETURN
+
+	
+	
 ;;;;;;ODDBOTS VARIABLES;;;;;;;;
 CURRENT_STATE:	DW 0
+NUM_MOVE_SECONDS:	DW	0
 
 ;; STATE NUMBER CONSTANTS
 NUM_STATE_START:	DW 0
