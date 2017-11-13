@@ -197,61 +197,46 @@ EXE_STATE_NE_CCW:
 	CALL Wait1
 	RETURN
 	
-;;In order to call this subroutine, the number of seconds to move must be stored in NUM_MOVE_SECONDS
-MOVE_SECONDS:
-	MAIN_MOVE_SECONDS:
-		LOAD 	NUM_MOVE_SECONDS	
-		OUT		SSEG1	
-		JZERO 	MAIN_MOVE_EXIT		;check to see if we are done moving
-									;keep moving
+;;Parameters: 	moveDeciseconds_parameter_decisecondsToMove
+;;Return:		NO VALUE
+;;	This function moves the robot forward a fMid speed for the number of deciseconds specified by
+;;	moveDeciseconds_parameter_decisecondsToMove. The robot will always move a minimum of 2 deciseconds
+moveDeciseconds:
+	OUT		TIMER												;;Reset the timer
+	LOAD	FIVE
+	STORE	moveDeciseconds_local_motorRefresh					;;Store 5 as the first refresh time
+	
+	LOAD	fMid	
+	STORE	dVel												;;Start moving
+	moveDeciseconds_main:														
+		IN		TIMER											;;Get the timer
+		SUB		moveDeciseconds_parameter_decisecondsToMove
+		JPOS	moveDeciseconds_exit							;;Check to see if we are done moving
+		
+		IN		TIMER
+		SUB		moveDeciseconds_local_motorRefresh				;;Check if we need to refresh the motors
+		JPOS	moveDeciseconds_refresh
+		
+		JUMP	moveDeciseconds_main	
+		
+	moveDeciseconds_refresh:
+		LOAD	moveDeciseconds_local_motorRefresh
+		ADDI	5
+		STORE	moveDeciseconds_local_motorRefresh
 		
 		LOAD	fMid
-		STORE 	dVel
-		OUT		TIMER				;reset the timer
-	MAIN_MOVE_TIMER_1:
-		IN 		TIMER
-		ADDI 	-3
-		JNEG 	MAIN_MOVE_TIMER_1
+		STORE	dVel											;;Move the robot at fMid
+		JUMP	moveDeciseconds_main
 		
-		LOAD	fMid
-		STORE 	dVel
-		OUT		TIMER
-	MAIN_MOVE_TIMER_2:
-		IN 		TIMER
-		ADDI 	-3
-		JNEG 	MAIN_MOVE_TIMER_2
-	
-		LOAD	fMid
-		STORE 	dVel
-		OUT		TIMER
-	MAIN_MOVE_TIMER_3:
-		IN 		TIMER
-		ADDI 	-3
-		JNEG 	MAIN_MOVE_TIMER_3
-		
-		LOAD	fMid
-		STORE 	dVel
-		OUT		TIMER
-	MAIN_MOVE_TIMER_4:
-		IN 		TIMER
-		ADDI 	-1
-		JNEG 	MAIN_MOVE_TIMER_4
-	
-	LOAD	NUM_MOVE_SECONDS
-	ADDI 	-1
-	STORE	NUM_MOVE_SECONDS
-	JUMP	MAIN_MOVE_SECONDS
-	
-	MAIN_MOVE_EXIT:
-		LOAD	ZERO
-		STORE 	dVel
+	moveDeciseconds_exit:
 		RETURN
 
 	
 	
 ;;;;;;ODDBOTS VARIABLES;;;;;;;;
 CURRENT_STATE:	DW 0
-NUM_MOVE_SECONDS:	DW	0
+moveDeciseconds_parameter_decisecondsToMove:	DW	0
+moveDeciseconds_local_motorRefresh:				DW  0
 
 ;; STATE NUMBER CONSTANTS
 NUM_STATE_START:	DW 0
