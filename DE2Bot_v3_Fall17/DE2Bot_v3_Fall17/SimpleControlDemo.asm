@@ -110,7 +110,7 @@ MAIN_STATE_MACHINE_LOOP:
 	JZERO	CALL_STATE_NE_CCW
 	
 ;; 3. loop back to the state machine loop
-	
+	;;comment
 ;; 4. state function block
 CALL_STATE_START:
 	CALL 	EXE_STATE_START
