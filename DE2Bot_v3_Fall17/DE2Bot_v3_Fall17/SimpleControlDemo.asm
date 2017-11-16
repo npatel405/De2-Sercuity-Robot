@@ -75,7 +75,8 @@ Main:
 	; code in that ISR will attempt to control the robot.
 	; If you want to take manual control of the robot,
 	; execute CLI &B0010 to disable the timer interrupt.
-	
+	CALL	MAIN_STATE_MACHINE_LOOP
+	CALL	moveDeciseconds
 ;;ODDBOTS CODE STARTS HERE;;
 MAIN_STATE_MACHINE_LOOP:
 ;; 1. Tasks that need to be done every loop need to go here
@@ -134,7 +135,7 @@ MAIN_STATE_MACHINE_LOOP:
 	JZERO	CALL_STATE_NW_CW
 	
 ;; 3. loop back to the state machine loop
-
+	;;Jump MAIN
 ;; 4. state function block
 CALL_STATE_START:
 	CALL 	EXE_STATE_START
@@ -193,9 +194,9 @@ EXE_STATE_START:
 	LOAD 	CURRENT_STATE
 	OUT 	SSEG1
 	
-	LOAD    TWO
-	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
-	CALL    MOVE_SECONDS
+	;LOAD    TWO
+	;STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
+	;CALL    MOVE_SECONDS
 	
 	LOAD	NUM_STATE_NW_CCW   ;;	Currently transitioning unconditionally
 	STORE	CURRENT_STATE	
@@ -206,9 +207,9 @@ EXE_STATE_NW_CCW:
 	LOAD CURRENT_STATE
 	OUT SSEG1
 	
-	LOAD    TWO
-	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
-	CALL    MOVE_SECONDS
+; 	LOAD    TWO
+; 	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
+; 	CALL    MOVE_SECONDS
 	
 	LOAD	NUM_STATE_SW_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
@@ -218,12 +219,11 @@ EXE_STATE_NW_CCW:
 EXE_STATE_SW_CCW:
 	LOAD CURRENT_STATE
 	OUT SSEG1
-	
+	CALL turnRight
 	;;turn then move a little
-	LOAD    TWO
-	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
-	CALL    MOVE_SECONDS
-	
+; 	LOAD    TWO
+; 	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
+; 	CALL    MOVE_SECONDS
 	LOAD	NUM_STATE_S_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
 	CALL Wait1
@@ -266,6 +266,7 @@ EXE_STATE_NE_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_E_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	;CALL 	moveDeciseconds	
 	CALL Wait1
 	RETURN
 	
@@ -273,7 +274,9 @@ EXE_STATE_E_CW:
 	LOAD CURRENT_STATE
 	OUT SSEG1
 	LOAD	NUM_STATE_SE_CW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
+	STORE	CURRENT_STATE
+	;CALL	turnRight
+	;CALL 	moveDeciseconds	
 	CALL Wait1
 	RETURN
 	
@@ -282,6 +285,7 @@ EXE_STATE_SE_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_S_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	;CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -290,6 +294,7 @@ EXE_STATE_S_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	;CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -298,6 +303,8 @@ EXE_STATE_SW_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_NW_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	;CALL 	turnRight
+	;CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -305,9 +312,13 @@ EXE_STATE_NW_CW:
 	LOAD CURRENT_STATE
 	OUT SSEG1
 	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
+	STORE	CURRENT_STATE
+	;CALL 	moveDeciseconds	
 	CALL Wait1
 	RETURN
+	
+distanceFunction:
+	;;this function will determine the distance to travel...
 	
 ;;Parameters: 	moveDeciseconds_parameter_decisecondsToMove
 ;;Return:		NO VALUE
@@ -343,8 +354,17 @@ moveDeciseconds:
 	moveDeciseconds_exit:
 		RETURN
 
+turnLeft:
+	LOADI  0
+	STORE  DVel
+	LOADI  90
+	STORE  DTheta	
 	
-	
+turnRight:
+	LOADI  0
+	STORE  DVel
+	LOADI  -90
+	STORE  DTheta
 ;;;;;;ODDBOTS VARIABLES;;;;;;;;
 CURRENT_STATE:	DW 0
 moveDeciseconds_parameter_decisecondsToMove:	DW	0
