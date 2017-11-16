@@ -74,7 +74,7 @@ Main:
 		LOADI	5
 		OUT		SSEG2
 		JUMP 	testloop
-	OUT    RESETPOS    ; reset odometer in case wheels moved after programming
+		OUT    RESETPOS    ; reset odometer in case wheels moved after programming
 	
 	; configure timer interrupts to enable the movement control code
 	LOADI  10          ; fire at 10 Hz (10 ms * 10).
@@ -252,106 +252,200 @@ EXE_STATE_SW_CCW:
 	RETURN
 	
 EXE_STATE_S_CCW:
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	LOAD	NUM_STATE_SE_CCW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_SE_CCW
+	RETURN
+	GOTO_STATE_SE_CCW:
+		LOAD	NUM_STATE_SE_CCW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_SE_CCW:
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	LOAD	NUM_STATE_E_CCW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+		
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_E_CCW
+	RETURN
+	GOTO_STATE_E_CCW:
+		CALL 	turnLeft
+		LOAD	NUM_STATE_E_CCW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_E_CCW:
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	LOAD	NUM_STATE_NE_CCW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_NE_CCW
+	RETURN
+	GOTO_STATE_NE_CCW:
+		LOAD	NUM_STATE_NE_CCW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_NE_CCW:
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	LOAD	NUM_STATE_NE_CW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_NE_CW
+	RETURN
+	GOTO_STATE_NE_CW:
+		CALL	turnAround
+		LOAD	NUM_STATE_NE_CW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_NE_CW:	
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	LOAD	NUM_STATE_E_CW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_E_CW
+	RETURN
+	GOTO_STATE_E_CW:
+		LOAD	NUM_STATE_E_CW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_E_CW:
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	LOAD	NUM_STATE_SE_CW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE
-	CALL 	turnRight
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_SE_CW
+	RETURN
+	GOTO_STATE_SE_CW:
+		LOAD	NUM_STATE_SE_CW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_SE_CW:	
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	LOAD	NUM_STATE_S_CW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL	turnRight
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_S_CW
+	RETURN
+	GOTO_STATE_S_CW:
+		CALL	turnRight
+		LOAD	NUM_STATE_S_CW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_S_CW:		
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_SW_CW
+	RETURN
+	GOTO_STATE_SW_CW:
+		LOAD	NUM_STATE_SW_CW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_SW_CW:	
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	LOAD	NUM_STATE_NW_CW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL 	turnRight
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_NW_CW
+	RETURN
+	GOTO_STATE_NW_CW:
+		CALL	turnRight
+		LOAD	NUM_STATE_NW_CW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_NW_CW:	
 	LOAD CURRENT_STATE
 	OUT SSEG1
-	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE
-	CALL 	getForwardDistance
-	CALL 	moveDeciseconds
-	CALL Wait1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_NW_CCW
+	RETURN
+	
+	;;start over loop
+	GOTO_STATE_NW_CCW:
+		CALL	turnAround
+		LOAD	NUM_STATE_NW_CCW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 distanceFunction:
@@ -415,6 +509,12 @@ turnRight:
 	LOADI  0
 	STORE  DVel
 	LOADI  -90
+	STORE  DTheta
+	
+turnAround
+	LOADI  0
+	STORE  DVel
+	LOADI  180
 	STORE  DTheta
 
 ;; cos(12) * h = distance
