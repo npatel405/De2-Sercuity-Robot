@@ -206,9 +206,11 @@ EXE_STATE_NW_CCW:
 	LOAD CURRENT_STATE
 	OUT SSEG1
 	
-	LOAD    TWO
-	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
-	CALL    MOVE_SECONDS
+	LOAD	FIVE
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	CALL	moveDeciseconds								;;Move forward .5 seconds
+	
+		
 	
 	LOAD	NUM_STATE_SW_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
@@ -343,12 +345,34 @@ moveDeciseconds:
 	moveDeciseconds_exit:
 		RETURN
 
+getForwardDistance:
+	LOAD	MASK2     	;Build the mask
+	OR		MASK3
+	OUT 	SONAREN		;Enable the sonar
 	
+	IN		DIST2
+	STORE	L2X
+	
+	IN		DIST3
+	STORE 	L2Y
+	
+	CALL	LEstimate
+	STORE	getForwardDistance_return
+	
+	
+	
+	
+	
+	
+
 	
 ;;;;;;ODDBOTS VARIABLES;;;;;;;;
 CURRENT_STATE:	DW 0
 moveDeciseconds_parameter_decisecondsToMove:	DW	0
 moveDeciseconds_local_motorRefresh:				DW  0
+getForwardDistance_return:						DW	0
+
+
 
 ;; STATE NUMBER CONSTANTS
 NUM_STATE_START:	DW 0
