@@ -75,8 +75,7 @@ Main:
 	; code in that ISR will attempt to control the robot.
 	; If you want to take manual control of the robot,
 	; execute CLI &B0010 to disable the timer interrupt.
-	CALL	MAIN_STATE_MACHINE_LOOP
-	CALL	moveDeciseconds
+
 ;;ODDBOTS CODE STARTS HERE;;
 MAIN_STATE_MACHINE_LOOP:
 ;; 1. Tasks that need to be done every loop need to go here
@@ -193,13 +192,13 @@ CALL_STATE_NW_CW:
 EXE_STATE_START:
 	LOAD 	CURRENT_STATE
 	OUT 	SSEG1
-	
 	;LOAD    TWO
 	;STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
 	;CALL    MOVE_SECONDS
-	CALL 	moveDeciseconds
 	LOAD	NUM_STATE_NW_CCW   ;;	Currently transitioning unconditionally
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL 	Wait1
 	RETURN
 	
@@ -210,9 +209,11 @@ EXE_STATE_NW_CCW:
 ; 	LOAD    TWO
 ; 	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
 ; 	CALL    MOVE_SECONDS
-	CALL 	moveDeciseconds
+
 	LOAD	NUM_STATE_SW_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -224,9 +225,10 @@ EXE_STATE_SW_CCW:
 ; 	LOAD    TWO
 ; 	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
 ; 	CALL    MOVE_SECONDS
-	CALL	moveDeciseconds
 	LOAD	NUM_STATE_S_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -235,6 +237,8 @@ EXE_STATE_S_CCW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SE_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -243,6 +247,8 @@ EXE_STATE_SE_CCW:
 	OUT SSEG1
 	LOAD	NUM_STATE_E_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -251,6 +257,8 @@ EXE_STATE_E_CCW:
 	OUT SSEG1
 	LOAD	NUM_STATE_NE_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -259,6 +267,8 @@ EXE_STATE_NE_CCW:
 	OUT SSEG1
 	LOAD	NUM_STATE_NE_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -267,7 +277,8 @@ EXE_STATE_NE_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_E_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
-	;CALL 	moveDeciseconds	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -276,8 +287,9 @@ EXE_STATE_E_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SE_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE
-	;CALL	turnRight
-	;CALL 	moveDeciseconds	
+	CALL 	turnRight
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -286,7 +298,9 @@ EXE_STATE_SE_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_S_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
-	;CALL 	moveDeciseconds
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
+	CALL	turnRight
 	CALL Wait1
 	RETURN
 	
@@ -295,7 +309,8 @@ EXE_STATE_S_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
-	;CALL 	moveDeciseconds
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -304,8 +319,9 @@ EXE_STATE_SW_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_NW_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
-	;CALL 	turnRight
-	;CALL 	moveDeciseconds
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
+	CALL 	turnRight
 	CALL Wait1
 	RETURN
 	
@@ -314,7 +330,8 @@ EXE_STATE_NW_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE
-	CALL 	moveDeciseconds	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -355,6 +372,20 @@ moveDeciseconds:
 	moveDeciseconds_exit:
 		RETURN
 
+getForwardDistance:
+	LOAD	MASK2     	;Build the mask
+	OR		MASK3
+	OUT 	SONAREN		;Enable the sonar
+	
+	IN		DIST2
+	STORE	L2X
+	
+	IN		DIST3
+	STORE 	L2Y
+	
+	CALL	LEstimate
+	STORE	getForwardDistance_return
+	
 turnLeft:
 	LOADI  0
 	STORE  DVel
@@ -366,10 +397,14 @@ turnRight:
 	STORE  DVel
 	LOADI  -90
 	STORE  DTheta
+
 ;;;;;;ODDBOTS VARIABLES;;;;;;;;
 CURRENT_STATE:	DW 0
 moveDeciseconds_parameter_decisecondsToMove:	DW	0
 moveDeciseconds_local_motorRefresh:				DW  0
+getForwardDistance_return:						DW	0
+
+
 
 ;; STATE NUMBER CONSTANTS
 NUM_STATE_START:	DW 0
