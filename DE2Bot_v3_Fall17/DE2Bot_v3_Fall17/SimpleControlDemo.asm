@@ -198,13 +198,13 @@ CALL_STATE_NW_CW:
 EXE_STATE_START:
 	LOAD 	CURRENT_STATE
 	OUT 	SSEG1
-	
 	;LOAD    TWO
 	;STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
 	;CALL    MOVE_SECONDS
-	
 	LOAD	NUM_STATE_NW_CCW   ;;	Currently transitioning unconditionally
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL 	Wait1
 	RETURN
 	
@@ -253,6 +253,8 @@ EXE_STATE_S_CCW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SE_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -261,6 +263,8 @@ EXE_STATE_SE_CCW:
 	OUT SSEG1
 	LOAD	NUM_STATE_E_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -269,6 +273,8 @@ EXE_STATE_E_CCW:
 	OUT SSEG1
 	LOAD	NUM_STATE_NE_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -277,6 +283,8 @@ EXE_STATE_NE_CCW:
 	OUT SSEG1
 	LOAD	NUM_STATE_NE_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -285,7 +293,8 @@ EXE_STATE_NE_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_E_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
-	;CALL 	moveDeciseconds	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -294,8 +303,9 @@ EXE_STATE_E_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SE_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE
-	;CALL	turnRight
-	;CALL 	moveDeciseconds	
+	CALL 	turnRight
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -304,7 +314,9 @@ EXE_STATE_SE_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_S_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
-	;CALL 	moveDeciseconds
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
+	CALL	turnRight
 	CALL Wait1
 	RETURN
 	
@@ -313,7 +325,8 @@ EXE_STATE_S_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
-	;CALL 	moveDeciseconds
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
@@ -322,8 +335,9 @@ EXE_STATE_SW_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_NW_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
-	;CALL 	turnRight
-	;CALL 	moveDeciseconds
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
+	CALL 	turnRight
 	CALL Wait1
 	RETURN
 	
@@ -332,7 +346,8 @@ EXE_STATE_NW_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE
-	;CALL 	moveDeciseconds	
+	CALL 	getForwardDistance
+	CALL 	moveDeciseconds
 	CALL Wait1
 	RETURN
 	
