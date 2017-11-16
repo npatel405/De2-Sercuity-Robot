@@ -1,5 +1,5 @@
 Assembler report for DE2Bot
-Thu Nov 16 16:46:27 2017
+Thu Nov 16 17:47:01 2017
 Quartus II Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Full Version
 
 
@@ -38,7 +38,7 @@ applicable agreement for further details.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Thu Nov 16 16:46:27 2017 ;
+; Assembler Status      ; Successful - Thu Nov 16 17:47:01 2017 ;
 ; Revision Name         ; DE2Bot                                ;
 ; Top-level Entity Name ; DE2bot                                ;
 ; Family                ; Cyclone II                            ;
@@ -94,8 +94,8 @@ applicable agreement for further details.
 ; Option         ; Setting                                                                                                             ;
 +----------------+---------------------------------------------------------------------------------------------------------------------+
 ; Device         ; EP2C35F672C6                                                                                                        ;
-; JTAG usercode  ; 0x0072A76A                                                                                                          ;
-; Checksum       ; 0x0072A76A                                                                                                          ;
+; JTAG usercode  ; 0x0072B020                                                                                                          ;
+; Checksum       ; 0x0072B020                                                                                                          ;
 +----------------+---------------------------------------------------------------------------------------------------------------------+
 
 
@@ -106,7 +106,7 @@ applicable agreement for further details.
 +--------------------+-----------------------------------------------------------------------------------------------------------------+
 ; Device             ; EPCS16                                                                                                          ;
 ; JTAG usercode      ; 0x00000000                                                                                                      ;
-; Checksum           ; 0x1C07D366                                                                                                      ;
+; Checksum           ; 0x1C08216B                                                                                                      ;
 ; Compression Ratio  ; 2                                                                                                               ;
 +--------------------+-----------------------------------------------------------------------------------------------------------------+
 
@@ -117,14 +117,14 @@ applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus II Assembler
     Info: Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Full Version
-    Info: Processing started: Thu Nov 16 16:46:22 2017
+    Info: Processing started: Thu Nov 16 17:46:58 2017
 Info: Command: quartus_asm --read_settings_files=on --write_settings_files=off DE2Bot -c DE2Bot
 Info: Writing out detailed assembly data for power analysis
 Info: Assembler is generating device programming files
 Info: Quartus II Assembler was successful. 0 errors, 0 warnings
     Info: Peak virtual memory: 295 megabytes
-    Info: Processing ended: Thu Nov 16 16:46:27 2017
-    Info: Elapsed time: 00:00:05
+    Info: Processing ended: Thu Nov 16 17:47:01 2017
+    Info: Elapsed time: 00:00:03
     Info: Total CPU time (on all processors): 00:00:02
 
 

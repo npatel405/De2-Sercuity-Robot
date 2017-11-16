@@ -65,11 +65,14 @@ WaitForUser:
 ;* Main code
 ;***************************************************************
 Main:
-	
+	LOADI 	66
+	OUT		SSEG1
 	testloop:
 		CALL	getForwardDistance
 		LOAD	getForwardDistance_return
 		OUT 	SSEG1
+		LOADI	5
+		OUT		SSEG2
 		JUMP 	testloop
 	OUT    RESETPOS    ; reset odometer in case wheels moved after programming
 	
@@ -395,12 +398,10 @@ getForwardDistance:
 	OUT 	SONAREN		;Enable the sonar
 	
 	IN		DIST2
-	STORE	L2X
+	STORE	getDistanceFromHypotenus_parameter_hypotenus
+	CALL	getDistanceFromHypotenus
+	LOAD	getDistanceFromHypotenus_return
 	
-	;;IN		DIST3
-	STORE 	L2Y
-	
-	CALL	L2Estimate
 	STORE	getForwardDistance_return
 	RETURN
 	
@@ -417,8 +418,22 @@ turnRight:
 	STORE  DTheta
 
 ;; cos(12) * h = distance
-
+; Calculation is max(X,Y)*0.961+min(X,Y)*0.406
+; To use:
+; - Store factors in m16sA and m16sB.
+; - Call Mult16s
+; - Result is stored in mres16sH and mres16sL (high and low words).
 getDistanceFromHypotenus:
+	LOAD	getDistanceFromHypotenus_parameter_hypotenus
+	STORE	m16sa
+	LOADI	246
+	STORE	m16sb
+	CALL	Mult16s
+	LOAD 	mres16sL
+	SHIFT	-8
+	;;TODO: THIS IS BROKEN, IT's not displaying the correct value
+	STORE	getDistanceFromHypotenus_return
+	RETURN
 	
 
 
@@ -427,8 +442,8 @@ CURRENT_STATE:	DW 0
 moveDeciseconds_parameter_decisecondsToMove:	DW	0
 moveDeciseconds_local_motorRefresh:				DW  0
 getForwardDistance_return:						DW	0
-getDistanceUsingHypotenus_parameter_hypotenus	DW  0
-getDistanceUsingHypotenus_return				DW	0
+getDistanceFromHypotenus_parameter_hypotenus:	DW  0
+getDistanceFromHypotenus_return:				DW	0
 
 
 
