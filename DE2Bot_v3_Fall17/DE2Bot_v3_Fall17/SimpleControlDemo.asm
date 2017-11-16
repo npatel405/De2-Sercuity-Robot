@@ -197,7 +197,7 @@ EXE_STATE_START:
 	;LOAD    TWO
 	;STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
 	;CALL    MOVE_SECONDS
-	
+	CALL 	moveDeciseconds
 	LOAD	NUM_STATE_NW_CCW   ;;	Currently transitioning unconditionally
 	STORE	CURRENT_STATE	
 	CALL 	Wait1
@@ -210,7 +210,7 @@ EXE_STATE_NW_CCW:
 ; 	LOAD    TWO
 ; 	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
 ; 	CALL    MOVE_SECONDS
-	
+	CALL 	moveDeciseconds
 	LOAD	NUM_STATE_SW_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
 	CALL Wait1
@@ -224,6 +224,7 @@ EXE_STATE_SW_CCW:
 ; 	LOAD    TWO
 ; 	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
 ; 	CALL    MOVE_SECONDS
+	CALL	moveDeciseconds
 	LOAD	NUM_STATE_S_CCW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE	
 	CALL Wait1
@@ -313,7 +314,7 @@ EXE_STATE_NW_CW:
 	OUT SSEG1
 	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
 	STORE	CURRENT_STATE
-	;CALL 	moveDeciseconds	
+	CALL 	moveDeciseconds	
 	CALL Wait1
 	RETURN
 	
