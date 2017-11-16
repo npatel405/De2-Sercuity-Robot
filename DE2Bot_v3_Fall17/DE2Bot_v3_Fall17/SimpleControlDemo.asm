@@ -65,6 +65,12 @@ WaitForUser:
 ;* Main code
 ;***************************************************************
 Main:
+	
+	testloop:
+		CALL	getForwardDistance
+		LOAD	getForwardDistance_return
+		OUT 	SSEG1
+		JUMP 	testloop
 	OUT    RESETPOS    ; reset odometer in case wheels moved after programming
 	
 	; configure timer interrupts to enable the movement control code
@@ -75,8 +81,7 @@ Main:
 	; code in that ISR will attempt to control the robot.
 	; If you want to take manual control of the robot,
 	; execute CLI &B0010 to disable the timer interrupt.
-	CALL	MAIN_STATE_MACHINE_LOOP
-	CALL	moveDeciseconds
+
 ;;ODDBOTS CODE STARTS HERE;;
 MAIN_STATE_MACHINE_LOOP:
 ;; 1. Tasks that need to be done every loop need to go here
@@ -204,26 +209,43 @@ EXE_STATE_START:
 	RETURN
 	
 EXE_STATE_NW_CCW:
-	LOAD CURRENT_STATE
-	OUT SSEG1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
 	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
 	
-	LOAD	NUM_STATE_SW_CCW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL Wait1
+	LOAD	MASK0
+	OUT 	SONAREN
+	IN		DIST0
+	OUT		SSEG2
+	
+	ADDI	-100000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_SW_CCW
+	RETURN
+	GOTO_STATE_SW_CCW:
+		LOAD	NUM_STATE_SW_CCW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_SW_CCW:
-	LOAD CURRENT_STATE
-	OUT SSEG1
-	CALL turnRight
-	;;turn then move a little
-; 	LOAD    TWO
-; 	STORE	NUM_MOVE_SECONDS   ;;	Move forward two seconds
-; 	CALL    MOVE_SECONDS
-	LOAD	NUM_STATE_S_CCW   ;;THIS IS HOW YOU TRANSITION STATES
-	STORE	CURRENT_STATE	
-	CALL Wait1
+	LOAD 	CURRENT_STATE
+	OUT 	SSEG1
+	
+	LOAD 	FOUR
+	STORE	moveDeciseconds_parameter_decisecondsToMove
+	
+	CALL	getForwardDistance
+	LOAD	getForwardDistance_return
+	OUT		SSEG2
+	
+	ADDI	-1000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_S_CCW
+	RETURN
+	GOTO_STATE_S_CCW:
+		CALL	turnLeft
+		LOAD	NUM_STATE_S_CCW
+		STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_S_CCW:
@@ -351,6 +373,7 @@ moveDeciseconds:
 	moveDeciseconds_exit:
 		RETURN
 
+;;	Returns an estimation of forward distance in getForwardDistance_return in mm
 getForwardDistance:
 	LOAD	MASK2     	;Build the mask
 	OR		MASK3
@@ -359,11 +382,12 @@ getForwardDistance:
 	IN		DIST2
 	STORE	L2X
 	
-	IN		DIST3
+	;;IN		DIST3
 	STORE 	L2Y
 	
-	CALL	LEstimate
+	CALL	L2Estimate
 	STORE	getForwardDistance_return
+	RETURN
 	
 turnLeft:
 	LOADI  0
@@ -377,11 +401,19 @@ turnRight:
 	LOADI  -90
 	STORE  DTheta
 
+;; cos(12) * h = distance
+
+getDistanceFromHypotenus:
+	
+
+
 ;;;;;;ODDBOTS VARIABLES;;;;;;;;
 CURRENT_STATE:	DW 0
 moveDeciseconds_parameter_decisecondsToMove:	DW	0
 moveDeciseconds_local_motorRefresh:				DW  0
 getForwardDistance_return:						DW	0
+getDistanceUsingHypotenus_parameter_hypotenus	DW  0
+getDistanceUsingHypotenus_return				DW	0
 
 
 
