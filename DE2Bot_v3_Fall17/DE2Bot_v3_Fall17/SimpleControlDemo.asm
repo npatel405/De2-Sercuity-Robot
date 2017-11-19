@@ -526,6 +526,8 @@ getForwardDistance:
 	STORE	getForwardDistance_return
 	RETURN
 	
+	
+;; turn inbetween states
 turnLeft:
 	LOADI  0
 	STORE  DVel
@@ -543,6 +545,37 @@ turnAround:
 	STORE  DVel
 	LOADI  180
 	STORE  DTheta
+	
+;;Nick's wobble...
+wobble:
+	OUT TIMER
+wobble_Left:
+	LOAD ZERO	
+	ADDI 300
+	OUT RVELCMD ;;LEFT WHEEL GOES 1MM/SEC
+	LOAD ZERO
+	ADDI 150
+	OUT LVELCMD ;;RIGHT WHEEL GOES 2MM/SEC
+wobble_Check1:
+	IN TIMER  ;;CHECK TIMER
+	OUT SSEG2
+	ADDI -10
+	JNEG wobble_Left ;;HAS 1 SECONDS PASSED?
+	OUT TIMER    ;;RESET TIMER
+wobble_Right:
+	LOAD ZERO
+	ADDI 300
+	OUT LVELCMD ;;RIGHT WHEEL GOES 1MM/SEC
+	LOAD ZERO
+	ADDI 150
+	OUT RVELCMD ;;LEFT WHEEL GOES 2MM/SEC
+wobble_Check2:
+	IN TIMER
+	OUT SSEG2
+	ADDI -10
+	JNEG wobble_Right
+JUMP wobble
+
 
 ;; cos(12) * h = distance
 ; Calculation is max(X,Y)*0.961+min(X,Y)*0.406
