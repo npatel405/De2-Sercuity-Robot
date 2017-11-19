@@ -242,7 +242,7 @@ EXE_STATE_SW_CCW:
 	LOAD	getForwardDistance_return
 	OUT		SSEG2
 	
-	ADDI	-1000					;if the wall is 1000mm away, transition
+	ADDI	-100000					;if the wall is 1000mm away, transition
 	JNEG	GOTO_STATE_S_CCW
 	RETURN
 	GOTO_STATE_S_CCW:
@@ -320,8 +320,8 @@ EXE_STATE_NE_CCW:
 	LOAD	getForwardDistance_return
 	OUT		SSEG2
 	
-	ADDI	-1000					;if the wall is 1000mm away, transition
-	JNEG	GOTO_STATE_NE_CW
+	ADDI	-100000					;if the wall is 1000mm away, transition
+	JNEG	GOTO_STATE_NE_CW		
 	RETURN
 	GOTO_STATE_NE_CW:
 		CALL	turnAround
@@ -378,7 +378,7 @@ EXE_STATE_SE_CW:
 	LOAD	getForwardDistance_return
 	OUT		SSEG2
 	
-	ADDI	-1000					;if the wall is 1000mm away, transition
+	ADDI	-100000 					;if the wall is 1000mm away, transition
 	JNEG	GOTO_STATE_S_CW
 	RETURN
 	GOTO_STATE_S_CW:
@@ -398,7 +398,7 @@ EXE_STATE_S_CW:
 	LOAD	getForwardDistance_return
 	OUT		SSEG2
 	
-	ADDI	-1000					;if the wall is 1000mm away, transition
+	ADDI	-4000					;if the wall is 1000mm away, transition
 	JNEG	GOTO_STATE_SW_CW
 	RETURN
 	GOTO_STATE_SW_CW:
@@ -417,7 +417,7 @@ EXE_STATE_SW_CW:
 	LOAD	getForwardDistance_return
 	OUT		SSEG2
 	
-	ADDI	-1000					;if the wall is 1000mm away, transition
+	ADDI	-100000					;if the wall is 1000mm away, transition
 	JNEG	GOTO_STATE_NW_CW
 	RETURN
 	GOTO_STATE_NW_CW:
@@ -437,7 +437,7 @@ EXE_STATE_NW_CW:
 	LOAD	getForwardDistance_return
 	OUT		SSEG2
 	
-	ADDI	-1000					;if the wall is 1000mm away, transition
+	ADDI	-100000					;if the wall is 1000mm away, transition
 	JNEG	GOTO_STATE_NW_CCW
 	RETURN
 	
