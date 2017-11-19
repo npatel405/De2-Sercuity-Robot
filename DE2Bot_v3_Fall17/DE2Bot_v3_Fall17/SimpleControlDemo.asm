@@ -210,7 +210,7 @@ EXE_STATE_START:
 	IN		DIST0
 	OUT		SSEG2
 	
-	ADDI	-100000					;if the baffle is not detected to the right, then move
+	ADDI	-100000					;if the baffle is not detected to the left, then move
 	JPOS	GOTO_STATE_NW_CCW		;;JNEG	GOTO_STATE_NW_CCW
 	RETURN
 	GOTO_STATE_NW_CCW:
