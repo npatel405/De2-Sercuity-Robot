@@ -65,6 +65,10 @@ WaitForUser:
 ;* Main code
 ;***************************************************************
 Main:
+	LOADI  10          ; fire at 10 Hz (10 ms * 10).
+	OUT    CTIMER      ; turn on timer peripheral
+	SEI    &B0010
+	
 	LOADI 	66
 	OUT		SSEG1
 	testloop:
@@ -98,45 +102,45 @@ MAIN_STATE_MACHINE_LOOP:
 	SUB		NUM_STATE_NW_CCW
 	JZERO	CALL_STATE_NW_CCW
 	
-	LOAD	CURRENT_STATE
-	SUB		NUM_STATE_SW_CCW
-	JZERO	CALL_STATE_SW_CCW
+	;LOAD	CURRENT_STATE
+	;SUB		NUM_STATE_SW_CCW
+	;JZERO	CALL_STATE_SW_CCW
 	
 	LOAD	CURRENT_STATE
 	SUB		NUM_STATE_S_CCW
 	JZERO	CALL_STATE_S_CCW
 	
-	LOAD	CURRENT_STATE
-	SUB		NUM_STATE_SE_CCW
-	JZERO	CALL_STATE_SE_CCW
+	;LOAD	CURRENT_STATE
+	;SUB		NUM_STATE_SE_CCW
+	;JZERO	CALL_STATE_SE_CCW
 	
 	LOAD	CURRENT_STATE
 	SUB		NUM_STATE_E_CCW
 	JZERO	CALL_STATE_E_CCW
 	
-	LOAD	CURRENT_STATE
-	SUB		NUM_STATE_NE_CCW
-	JZERO	CALL_STATE_NE_CCW
+	;LOAD	CURRENT_STATE
+	;SUB		NUM_STATE_NE_CCW
+	;JZERO	CALL_STATE_NE_CCW
 	
 	LOAD	CURRENT_STATE
 	SUB		NUM_STATE_NE_CW
 	JZERO	CALL_STATE_NE_CW
 	
-	LOAD	CURRENT_STATE
-	SUB		NUM_STATE_E_CW
-	JZERO	CALL_STATE_E_CW
+	;LOAD	CURRENT_STATE
+	;SUB		NUM_STATE_E_CW
+	;JZERO	CALL_STATE_E_CW
 	
-	LOAD	CURRENT_STATE
-	SUB		NUM_STATE_SE_CW
-	JZERO	CALL_STATE_SE_CW
+	;LOAD	CURRENT_STATE
+	;SUB		NUM_STATE_SE_CW
+	;JZERO	CALL_STATE_SE_CW
 	
 	LOAD	CURRENT_STATE
 	SUB		NUM_STATE_S_CW
 	JZERO	CALL_STATE_S_CW
 	
-	LOAD	CURRENT_STATE
-	SUB		NUM_STATE_SW_CW
-	JZERO	CALL_STATE_SW_CW
+	;LOAD	CURRENT_STATE
+	;SUB		NUM_STATE_SW_CW
+	;JZERO	CALL_STATE_SW_CW
 	
 	LOAD	CURRENT_STATE
 	SUB		NUM_STATE_NW_CW
@@ -153,45 +157,45 @@ CALL_STATE_NW_CCW:
 	CALL 	EXE_STATE_NW_CCW
 	JUMP 	MAIN_STATE_MACHINE_LOOP
 	
-CALL_STATE_SW_CCW:
-	CALL 	EXE_STATE_SW_CCW
-	JUMP 	MAIN_STATE_MACHINE_LOOP
+;CALL_STATE_SW_CCW:
+;	CALL 	EXE_STATE_SW_CCW
+;	JUMP 	MAIN_STATE_MACHINE_LOOP
 
 CALL_STATE_S_CCW:
 	CALL 	EXE_STATE_S_CCW
 	JUMP 	MAIN_STATE_MACHINE_LOOP
 
-CALL_STATE_SE_CCW:
-	CALL 	EXE_STATE_SE_CCW
-	JUMP 	MAIN_STATE_MACHINE_LOOP
+;CALL_STATE_SE_CCW:
+;	CALL 	EXE_STATE_SE_CCW
+;	JUMP 	MAIN_STATE_MACHINE_LOOP
 
 CALL_STATE_E_CCW:
 	CALL 	EXE_STATE_E_CCW
 	JUMP 	MAIN_STATE_MACHINE_LOOP
 	
-CALL_STATE_NE_CCW:
-	CALL 	EXE_STATE_NE_CCW
-	JUMP 	MAIN_STATE_MACHINE_LOOP
+;CALL_STATE_NE_CCW:
+;	CALL 	EXE_STATE_NE_CCW
+;	JUMP 	MAIN_STATE_MACHINE_LOOP
 	
 CALL_STATE_NE_CW:	
 	CALL 	EXE_STATE_NE_CW
 	JUMP 	MAIN_STATE_MACHINE_LOOP
 	
-CALL_STATE_E_CW:		
-	CALL 	EXE_STATE_E_CW
-	JUMP 	MAIN_STATE_MACHINE_LOOP
+;CALL_STATE_E_CW:		
+;	CALL 	EXE_STATE_E_CW
+;	JUMP 	MAIN_STATE_MACHINE_LOOP
 	
-CALL_STATE_SE_CW:	
-	CALL 	EXE_STATE_SE_CW
-	JUMP 	MAIN_STATE_MACHINE_LOOP
+;CALL_STATE_SE_CW:	
+;	CALL 	EXE_STATE_SE_CW
+;	JUMP 	MAIN_STATE_MACHINE_LOOP
 	
 CALL_STATE_S_CW:		
 	CALL 	EXE_STATE_S_CW
 	JUMP 	MAIN_STATE_MACHINE_LOOP
 	
-CALL_STATE_SW_CW:
-	CALL 	EXE_STATE_SW_CW
-	JUMP 	MAIN_STATE_MACHINE_LOOP
+;CALL_STATE_SW_CW:
+;	CALL 	EXE_STATE_SW_CW
+;	JUMP 	MAIN_STATE_MACHINE_LOOP
 	
 CALL_STATE_NW_CW:	
 	CALL 	EXE_STATE_NW_CW
@@ -204,19 +208,10 @@ EXE_STATE_START:
 	
 	LOAD 	FOUR
 	STORE	moveDeciseconds_parameter_decisecondsToMove
+	CALL 	moveDeciseconds
 	
-	LOAD	MASK0
-	OUT 	SONAREN
-	IN		DIST0
-	OUT		SSEG2
-	
-	ADDI	-100000					;if the baffle is not detected to the left, then move
-	JPOS	GOTO_STATE_NW_CCW		;;JNEG	GOTO_STATE_NW_CCW
-	RETURN
-	GOTO_STATE_NW_CCW:
-		CALL	moveDeciseconds
-		LOAD	NUM_STATE_NW_CCW
-		STORE	CURRENT_STATE	
+	LOAD	NUM_STATE_NW_CCW
+	STORE	CURRENT_STATE	
 	RETURN
 	
 EXE_STATE_NW_CCW:
@@ -225,40 +220,39 @@ EXE_STATE_NW_CCW:
 	
 	LOAD 	FOUR
 	STORE	moveDeciseconds_parameter_decisecondsToMove
+	CALL	moveDeciseconds
 	
-	;;check wall distance too
-	ADDI	-1000					;if the baffle is 1000mm away, transition
-	JNEG	GOTO_STATE_SW_CCW
-	;;ALSO check for intruder
-	;;CALL	Check
-	RETURN
-	GOTO_STATE_SW_CCW:
-		CALL 	moveDeciseconds
-		LOAD	NUM_STATE_SW_CCW
-		STORE	CURRENT_STATE	
-	RETURN
+	;;TODO: getDistance(LEFT)
 	
-EXE_STATE_SW_CCW:
-	LOAD 	CURRENT_STATE
-	OUT 	SSEG1
+	ADDI	-1000000
+	JNEG	GOTO_STATE_S_CCW
 	
-	LOAD 	FOUR
-	STORE	moveDeciseconds_parameter_decisecondsToMove
-	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
-	
-	ADDI	-100000					;if the wall is 1000mm away, transition
-	JPOS	GOTO_STATE_S_CCW		;;sonar will read infinity so turn robot and go behind baffle
 	RETURN
 	GOTO_STATE_S_CCW:
-		;;may need to move a bit more to account for corner of baffle to not run into it
-		CALL	turnLeft
-		CALL 	moveDeciseconds
+		CALL turnLeft
+	
 		LOAD	NUM_STATE_S_CCW
 		STORE	CURRENT_STATE	
 	RETURN
+	
+;EXE_STATE_SW_CCW:
+;	LOAD 	CURRENT_STATE
+;	OUT 	SSEG1
+	
+;	LOAD 	FOUR
+;	STORE	moveDeciseconds_parameter_decisecondsToMove
+;	CALL 	moveDeciseconds
+	
+	;;TODO: getDistance(FORWARD)
+	
+;	ADDI	-1000					
+;	JPOS	GOTO_STATE_S_CCW
+;	RETURN
+;	GOTO_STATE_S_CCW:
+		
+;		LOAD	NUM_STATE_S_CCW
+;		STORE	CURRENT_STATE	
+;	RETURN
 	
 EXE_STATE_S_CCW:
 	LOAD 	CURRENT_STATE
@@ -266,41 +260,40 @@ EXE_STATE_S_CCW:
 	
 	LOAD 	FOUR
 	STORE	moveDeciseconds_parameter_decisecondsToMove
+	CALL 	moveDeciseconds
 	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
-	
-	ADDI	-1000					;if the wall is 1000mm away, transition
-	JNEG	GOTO_STATE_SE_CCW
-	RETURN
-	GOTO_STATE_SE_CCW:
-		CALL 	moveDeciseconds
-		LOAD	NUM_STATE_SE_CCW
-		STORE	CURRENT_STATE	
-	RETURN
-	
-EXE_STATE_SE_CCW:
-	LOAD 	CURRENT_STATE
-	OUT 	SSEG1
-		
-	LOAD 	FOUR
-	STORE	moveDeciseconds_parameter_decisecondsToMove
-	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
+	;;TODO: getDistance(FORWARD)
 	
 	ADDI	-1000					;if the wall is 1000mm away, transition
 	JNEG	GOTO_STATE_E_CCW
 	RETURN
 	GOTO_STATE_E_CCW:
-		;;move a little bit up further to not hit baffle corner
-		CALL 	turnLeft
-		CALL	moveDeciseconds
+
 		LOAD	NUM_STATE_E_CCW
 		STORE	CURRENT_STATE	
 	RETURN
+	
+;EXE_STATE_SE_CCW:
+;	LOAD 	CURRENT_STATE
+;	OUT 	SSEG1
+;		
+;	LOAD 	FOUR
+;	STORE	moveDeciseconds_parameter_decisecondsToMove
+;	
+;	CALL	getForwardDistance
+;	LOAD	getForwardDistance_return
+;	OUT		SSEG2
+;	
+;	ADDI	-1000					;if the wall is 1000mm away, transition
+;	JNEG	GOTO_STATE_E_CCW
+;	RETURN
+;	GOTO_STATE_E_CCW:
+		;;move a little bit up further to not hit baffle corner
+;		CALL 	turnLeft
+;		CALL	moveDeciseconds
+;		LOAD	NUM_STATE_E_CCW
+;		STORE	CURRENT_STATE	
+;	RETURN
 	
 EXE_STATE_E_CCW:
 	LOAD 	CURRENT_STATE
@@ -308,108 +301,102 @@ EXE_STATE_E_CCW:
 	
 	LOAD 	FOUR
 	STORE	moveDeciseconds_parameter_decisecondsToMove
+	CALL	moveDeciseconds
 	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
+	;;TODO getDistance(LEFT)
 	
-	ADDI	-1000					;if the wall is 1000mm away, transition
-	JNEG	GOTO_STATE_NE_CCW
-	RETURN
-	GOTO_STATE_NE_CCW:
-		CALL 	moveDeciseconds
-		LOAD	NUM_STATE_NE_CCW
-		STORE	CURRENT_STATE	
-	RETURN
-	
-EXE_STATE_NE_CCW:
-	LOAD 	CURRENT_STATE
-	OUT 	SSEG1
-	
-	LOAD 	FOUR
-	STORE	moveDeciseconds_parameter_decisecondsToMove
-	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
-	
-	ADDI	-100000					;if infinite reading, go to CW state
-	JPOS	GOTO_STATE_NE_CW		
+	ADDI	-100000
+	JNEG	GOTO_STATE_NE_CW
 	RETURN
 	GOTO_STATE_NE_CW:
-		;;CHECK TO MAKE SURE DESKS ARE NOT in the way
-		;;back up then turn around just to be safe
-		CALL	turnAround
+		CALL 	moveDeciseconds ;;Make sure we are next to the baffle
+		CALL 	turnAround
 		LOAD	NUM_STATE_NE_CW
 		STORE	CURRENT_STATE	
 	RETURN
+	
+;EXE_STATE_NE_CCW:
+;	LOAD 	CURRENT_STATE
+;	OUT 	SSEG1
+;	
+;	LOAD 	FOUR
+;	STORE	moveDeciseconds_parameter_decisecondsToMove
+;	
+;	CALL	getForwardDistance
+;	LOAD	getForwardDistance_return
+;	OUT		SSEG2
+;	
+;	ADDI	-100000					;if infinite reading, go to CW state
+;	JPOS	GOTO_STATE_NE_CW		
+;	RETURN
+;	GOTO_STATE_NE_CW:
+		;;CHECK TO MAKE SURE DESKS ARE NOT in the way
+		;;back up then turn around just to be safe
+;		CALL	turnAround
+;		LOAD	NUM_STATE_NE_CW
+;		STORE	CURRENT_STATE	
+;	RETURN
 	
 EXE_STATE_NE_CW:	
 	LOAD 	CURRENT_STATE
 	OUT 	SSEG1
 	
-	LOAD	MASK5
-	OUT 	SONAREN
-	IN		DIST5
-	OUT		SSEG2
-	
 	LOAD 	FOUR
 	STORE	moveDeciseconds_parameter_decisecondsToMove
+	CALL	moveDeciseconds
 	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
+	;;getDistance(FORWARD)
 	
-	ADDI	-100000					;if infinite, transition 
-	JPOS	GOTO_STATE_E_CW
-	RETURN
-	GOTO_STATE_E_CW:
-		CALL	moveDeciseconds
-		LOAD	NUM_STATE_E_CW
-		STORE	CURRENT_STATE	
-	RETURN
-	
-EXE_STATE_E_CW:
-	LOAD 	CURRENT_STATE
-	OUT 	SSEG1
-	
-	LOAD 	FOUR
-	STORE	moveDeciseconds_parameter_decisecondsToMove
-	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
-	
-	ADDI	-1000					;if the wall is 1000mm away, transition
-	JNEG	GOTO_STATE_SE_CW
-	RETURN
-	GOTO_STATE_SE_CW:
-		CALL	moveDeciseconds
-		LOAD	NUM_STATE_SE_CW
-		STORE	CURRENT_STATE	
-	RETURN
-	
-EXE_STATE_SE_CW:	
-	LOAD 	CURRENT_STATE
-	OUT 	SSEG1
-	
-	LOAD 	FOUR
-	STORE	moveDeciseconds_parameter_decisecondsToMove
-	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
-	
-	ADDI	-100000 					;if beyond baffle (infinite)
+	ADDI	-1000				;if infinite, transition 
 	JPOS	GOTO_STATE_S_CW
 	RETURN
 	GOTO_STATE_S_CW:
-		;;move up a little then turn 
-		CALL	turnRight
 		CALL	moveDeciseconds
 		LOAD	NUM_STATE_S_CW
 		STORE	CURRENT_STATE	
 	RETURN
+	
+;EXE_STATE_E_CW:
+;	LOAD 	CURRENT_STATE
+;	OUT 	SSEG1
+;	
+;	LOAD 	FOUR
+;	STORE	moveDeciseconds_parameter_decisecondsToMove
+;	
+;	CALL	getForwardDistance
+;	LOAD	getForwardDistance_return
+;	OUT		SSEG2
+;	
+;	ADDI	-1000					;if the wall is 1000mm away, transition
+;	JNEG	GOTO_STATE_SE_CW
+;	RETURN
+;	GOTO_STATE_SE_CW:
+;		CALL	moveDeciseconds
+;		LOAD	NUM_STATE_SE_CW
+;		STORE	CURRENT_STATE	
+;	RETURN
+	
+;EXE_STATE_SE_CW:	
+;	LOAD 	CURRENT_STATE
+;	OUT 	SSEG1
+;	
+;	LOAD 	FOUR
+;	STORE	moveDeciseconds_parameter_decisecondsToMove
+;	
+;	CALL	getForwardDistance
+;	LOAD	getForwardDistance_return
+;	OUT		SSEG2
+;	
+;	ADDI	-100000 					;if beyond baffle (infinite)
+;	JPOS	GOTO_STATE_S_CW
+;	RETURN
+;	GOTO_STATE_S_CW:
+		;;move up a little then turn 
+;		CALL	turnRight
+;		CALL	moveDeciseconds
+;		LOAD	NUM_STATE_S_CW
+;		STORE	CURRENT_STATE	
+;	RETURN
 	
 EXE_STATE_S_CW:		
 	LOAD 	CURRENT_STATE
@@ -417,41 +404,40 @@ EXE_STATE_S_CW:
 	
 	LOAD 	FOUR
 	STORE	moveDeciseconds_parameter_decisecondsToMove
+	CALL	moveDeciseconds
 	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
+	;;TODO getDistance(FORWARD)
 	
 	ADDI	-1000					;if the wall is 1000mm away, transition
-	JNEG	GOTO_STATE_SW_CW
-	RETURN
-	GOTO_STATE_SW_CW:
-		CALL	moveDeciseconds
-		LOAD	NUM_STATE_SW_CW
-		STORE	CURRENT_STATE	
-	RETURN
-	
-EXE_STATE_SW_CW:	
-	LOAD 	CURRENT_STATE
-	OUT 	SSEG1
-	
-	LOAD 	FOUR
-	STORE	moveDeciseconds_parameter_decisecondsToMove
-	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
-	
-	ADDI	-100000					;if infinite 
-	JPOS	GOTO_STATE_NW_CW
+	JNEG	GOTO_STATE_NW_CW
 	RETURN
 	GOTO_STATE_NW_CW:
-		;;move up a little
-		CALL	turnRight
-		CALL	moveDeciseconds
+		CALL 	turnRight
 		LOAD	NUM_STATE_NW_CW
 		STORE	CURRENT_STATE	
 	RETURN
+	
+;EXE_STATE_SW_CW:	
+;	LOAD 	CURRENT_STATE
+;	OUT 	SSEG1
+;	
+;	LOAD 	FOUR
+;	STORE	moveDeciseconds_parameter_decisecondsToMove
+;	
+;	CALL	getForwardDistance
+;	LOAD	getForwardDistance_return
+;	OUT		SSEG2
+;	
+;	ADDI	-100000					;if infinite 
+;	JPOS	GOTO_STATE_NW_CW
+;	RETURN
+;	GOTO_STATE_NW_CW:
+		;;move up a little
+;		CALL	turnRight
+;		CALL	moveDeciseconds
+;		LOAD	NUM_STATE_NW_CW
+;		STORE	CURRENT_STATE	
+;	RETURN
 	
 EXE_STATE_NW_CW:	
 	LOAD CURRENT_STATE
@@ -459,19 +445,20 @@ EXE_STATE_NW_CW:
 	
 	LOAD 	FOUR
 	STORE	moveDeciseconds_parameter_decisecondsToMove
+	CALL	moveDeciseconds
 	
-	CALL	getForwardDistance
-	LOAD	getForwardDistance_return
-	OUT		SSEG2
+	;;TODO getDistance(RIGHT)
 	
 	ADDI	-100000					;if the wall is 1000mm away, transition
-	JPOS	GOTO_STATE_NE_CCW2		
+	JNEG	GOTO_STATE_NW_CCW		
 	RETURN
-	GOTO_STATE_NE_CCW2:
-		;;CHECK TO MAKE SURE DESKS ARE NOT in the way
-		;;back up then turn around just to be safe
+	GOTO_STATE_NW_CCW:
+		LOAD 	FOUR
+		STORE	moveDeciseconds_parameter_decisecondsToMove
+		CALL	moveDeciseconds
+		
 		CALL	turnAround
-		LOAD	NUM_STATE_NE_CW
+		LOAD	NUM_STATE_NW_CCW
 		STORE	CURRENT_STATE	
 	RETURN
 	
@@ -513,18 +500,72 @@ moveDeciseconds:
 		RETURN
 
 ;;	Returns an estimation of forward distance in getForwardDistance_return in mm
+;;	getForwardDistance_local_minDistance
 getForwardDistance:
 	LOAD	MASK2     	;Build the mask
 	OR		MASK3
 	OUT 	SONAREN		;Enable the sonar
+	;getForwardDistance_local_currentTheta
+	LOADI	0
+	STORE	Dvel
+	LOADI	40
+	OUT		SSEG1
+	STORE	getForwardDistance_local_currentTheta
+	STORE	DTheta		;;Turn 30 degrees left
+	CALL	WaitPoint2
 	
-	IN		DIST2
-	STORE	getDistanceFromHypotenus_parameter_hypotenus
-	CALL	getDistanceFromHypotenus
-	LOAD	getDistanceFromHypotenus_return
+	getForwardDistance_scanLoop:
+		LOAD	getForwardDistance_local_currentTheta
+		OUT		SSEG1
+		ADDI	30
+		JZERO	getForwardDistance_returnMin
+		
+		LOAD	DIST2
+		SUB		getForwardDistance_local_minDistance
+		JPOS	getForwardDistance_check3
+		
+		LOAD	DIST2
+		STORE	getForwardDistance_local_minDistance
+		
+		getForwardDistance_check3:
+		
+		LOAD	DIST3
+		SUB		getForwardDistance_local_minDistance
+		
+		JPOS	getForwardDistance_scanTurn
+		
+		LOAD	DIST3
+		STORE	getForwardDistance_local_minDistance		
+		
+		getForwardDistance_scanTurn:
+			LOADI	0
+			STORE	Dvel
+			LOADI	-20
+			STORE	DTheta
+			CALL	WaitPoint2
+			
+			LOAD	getForwardDistance_local_currentTheta
+			ADDI	-10
+			JUMP	getForwardDistance_scanLoop
+		
+	getForwardDistance_returnMin:
+		LOAD	getForwardDistance_local_minDistance
+		STORE	getForwardDistance_return
+		
+		LOADI	0
+		STORE	Dvel
+		LOADI 	30
+		STORE	DTheta
+		CALL	WaitPoint2
+		RETURN
+	;;1 rotate left
+	;; for x
+	;;scan
+	;; if scan < min{ min = scan}
+	;;rotate right
 	
-	STORE	getForwardDistance_return
-	RETURN
+	
+
 	
 	
 ;; turn inbetween states
@@ -533,19 +574,21 @@ turnLeft:
 	STORE  DVel
 	LOADI  90
 	STORE  DTheta	
+	RETURN
 	
 turnRight:
 	LOADI  0
 	STORE  DVel
 	LOADI  -90
 	STORE  DTheta
+	RETURn
 	
 turnAround:
 	LOADI  0
 	STORE  DVel
 	LOADI  180
 	STORE  DTheta
-	
+	RETURN
 ;;Nick's wobble...
 wobble:
 	OUT TIMER
@@ -601,9 +644,12 @@ getDistanceFromHypotenus:
 CURRENT_STATE:	DW 0
 moveDeciseconds_parameter_decisecondsToMove:	DW	0
 moveDeciseconds_local_motorRefresh:				DW  0
+getForwardDistance_local_minDistance:			DW	0
+getForwardDistance_local_currentTheta:			DW  0
 getForwardDistance_return:						DW	0
 getDistanceFromHypotenus_parameter_hypotenus:	DW  0
 getDistanceFromHypotenus_return:				DW	0
+
 
 
 
@@ -1203,6 +1249,16 @@ Wloop:
 	OUT    XLEDS       ; User-feedback that a pause is occurring.
 	ADDI   -10         ; 1 second at 10Hz.
 	JNEG   Wloop
+	RETURN
+	
+; Subroutine to wait (block) for 1 second
+WaitPoint2:
+	OUT    TIMER
+W2loop:
+	IN     TIMER
+	OUT    XLEDS       ; User-feedback that a pause is occurring.
+	ADDI   -2         ; 1 second at 10Hz.
+	JNEG   W2loop
 	RETURN
 
 ; This subroutine will get the battery voltage,
