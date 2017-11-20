@@ -15,282 +15,282 @@ CONTENT
            002 : 295F;  -- 	JUMP   CTimer_ISR  ; Timer interrupt
            003 : B000;  -- 	RETI               ; UART interrupt (unused)
            004 : B000;  -- 	RETI               ; Motor stall interrupt (unused)
-           005 : 0AE0;  -- 	LOAD   Zero
+           005 : 0AE6;  -- 	LOAD   Zero
            006 : 9883;  -- 	OUT    LVELCMD     ; Stop motors
            007 : 988B;  -- 	OUT    RVELCMD
            008 : 1162;  -- 	STORE  DVel        ; Reset movement API variables
            009 : 1161;  -- 	STORE  DTheta
            00A : 98B2;  -- 	OUT    SONAREN     ; Disable sonar (optional)
            00B : 980A;  -- 	OUT    BEEP        ; Stop any beeping (optional)
-           00C : 82C8;  -- 	CALL   SetupI2C    ; Configure the I2C to read the battery voltage
-           00D : 82AA;  -- 	CALL   BattCheck   ; Get battery voltage (and end if too low).
+           00C : 82CE;  -- 	CALL   SetupI2C    ; Configure the I2C to read the battery voltage
+           00D : 82B0;  -- 	CALL   BattCheck   ; Get battery voltage (and end if too low).
            00E : 9806;  -- 	OUT    LCD         ; Display battery voltage (hex, tenths of volts)
            00F : B930;  -- 	LOADI  &H130
            010 : 980A;  -- 	OUT    BEEP        ; Short hello beep
            011 : 9003;  -- 	IN     XIO         ; XIO contains SAFETY signal
-           012 : 4AEF;  -- 	AND    Mask4       ; SAFETY signal is bit 4
+           012 : 4AF5;  -- 	AND    Mask4       ; SAFETY signal is bit 4
            013 : 3819;  -- 	JPOS   WaitForUser ; If ready, jump to wait for PB3
            014 : 9002;  -- 	IN     TIMER       ; Use the timer value to
-           015 : 4AEC;  -- 	AND    Mask1       ; blink LED17 as a reminder to toggle SW17
+           015 : 4AF2;  -- 	AND    Mask1       ; blink LED17 as a reminder to toggle SW17
            016 : 6008;  -- 	SHIFT  8           ; Shift over to LED17
            017 : 9807;  -- 	OUT    XLEDS       ; LED17 blinks at 2.5Hz (10Hz/4)
            018 : 2811;  -- 	JUMP   WaitForSafety
            019 : 9002;  -- 	IN     TIMER       ; Used to blink the LEDs above PB3
-           01A : 4AEC;  -- 	AND    Mask1
+           01A : 4AF2;  -- 	AND    Mask1
            01B : 6005;  -- 	SHIFT  5           ; Both LEDG6 and LEDG7
-           01C : 12DE;  -- 	STORE  Temp        ; (overkill, but looks nice)
+           01C : 12E4;  -- 	STORE  Temp        ; (overkill, but looks nice)
            01D : 6001;  -- 	SHIFT  1
-           01E : 52DE;  -- 	OR     Temp
+           01E : 52E4;  -- 	OR     Temp
            01F : 9807;  -- 	OUT    XLEDS
            020 : 9003;  -- 	IN     XIO         ; XIO contains KEYs
-           021 : 4AED;  -- 	AND    Mask2       ; KEY3 mask (KEY0 is reset and can't be read)
+           021 : 4AF3;  -- 	AND    Mask2       ; KEY3 mask (KEY0 is reset and can't be read)
            022 : 3819;  -- 	JPOS   WaitForUser ; not ready (KEYs are active-low, hence JPOS)
-           023 : 0AE0;  -- 	LOAD   Zero
+           023 : 0AE6;  -- 	LOAD   Zero
            024 : 9807;  -- 	OUT    XLEDS       ; clear LEDs once ready to continue
-           025 : B842;  -- 	LOADI 	66
-           026 : 9804;  -- 	OUT		SSEG1
-           027 : 80FC;  -- 		CALL	getForwardDistance
-           028 : 0919;  -- 		LOAD	getForwardDistance_return
-           029 : 9804;  -- 		OUT 	SSEG1
-           02A : B805;  -- 		LOADI	5
-           02B : 9805;  -- 		OUT		SSEG2
-           02C : 2827;  -- 		JUMP 	testloop
-           02D : 98C3;  -- 	OUT    RESETPOS    ; reset odometer in case wheels moved after programming
-           02E : B80A;  -- 	LOADI  10          ; fire at 10 Hz (10 ms * 10).
-           02F : 980C;  -- 	OUT    CTIMER      ; turn on timer peripheral
-           030 : A802;  -- 	SEI    &B0010      ; enable interrupts from source 2 (timer)
-           031 : 0916;  -- 	LOAD 	CURRENT_STATE
-           032 : 211C;  -- 	SUB		NUM_STATE_START
-           033 : 4058;  -- 	JZERO	CALL_STATE_START
-           034 : 0916;  -- 	LOAD	CURRENT_STATE
-           035 : 211D;  -- 	SUB		NUM_STATE_NW_CCW
-           036 : 405A;  -- 	JZERO	CALL_STATE_NW_CCW
-           037 : 0916;  -- 	LOAD	CURRENT_STATE
-           038 : 211E;  -- 	SUB		NUM_STATE_SW_CCW
-           039 : 405C;  -- 	JZERO	CALL_STATE_SW_CCW
-           03A : 0916;  -- 	LOAD	CURRENT_STATE
+           025 : B80A;  -- 	LOADI  10          ; fire at 10 Hz (10 ms * 10).
+           026 : 980C;  -- 	OUT    CTIMER      ; turn on timer peripheral
+           027 : A802;  -- 	SEI    &B0010
+           028 : B842;  -- 	LOADI 	66
+           029 : 9804;  -- 	OUT		SSEG1
+           02A : 80BD;  -- 		CALL	getForwardDistance
+           02B : 0919;  -- 		LOAD	getForwardDistance_return
+           02C : 9804;  -- 		OUT 	SSEG1
+           02D : B805;  -- 		LOADI	5
+           02E : 9805;  -- 		OUT		SSEG2
+           02F : 282A;  -- 		JUMP 	testloop
+           030 : 98C3;  -- 		OUT    RESETPOS    ; reset odometer in case wheels moved after programming
+           031 : B80A;  -- 	LOADI  10          ; fire at 10 Hz (10 ms * 10).
+           032 : 980C;  -- 	OUT    CTIMER      ; turn on timer peripheral
+           033 : A802;  -- 	SEI    &B0010      ; enable interrupts from source 2 (timer)
+           034 : 0914;  -- 	LOAD 	CURRENT_STATE
+           035 : 211C;  -- 	SUB		NUM_STATE_START
+           036 : 4049;  -- 	JZERO	CALL_STATE_START
+           037 : 0914;  -- 	LOAD	CURRENT_STATE
+           038 : 211D;  -- 	SUB		NUM_STATE_NW_CCW
+           039 : 404B;  -- 	JZERO	CALL_STATE_NW_CCW
+           03A : 0914;  -- 	LOAD	CURRENT_STATE
            03B : 211F;  -- 	SUB		NUM_STATE_S_CCW
-           03C : 405E;  -- 	JZERO	CALL_STATE_S_CCW
-           03D : 0916;  -- 	LOAD	CURRENT_STATE
-           03E : 2120;  -- 	SUB		NUM_STATE_SE_CCW
-           03F : 4060;  -- 	JZERO	CALL_STATE_SE_CCW
-           040 : 0916;  -- 	LOAD	CURRENT_STATE
-           041 : 2121;  -- 	SUB		NUM_STATE_E_CCW
-           042 : 4062;  -- 	JZERO	CALL_STATE_E_CCW
-           043 : 0916;  -- 	LOAD	CURRENT_STATE
-           044 : 2122;  -- 	SUB		NUM_STATE_NE_CCW
-           045 : 4064;  -- 	JZERO	CALL_STATE_NE_CCW
-           046 : 0916;  -- 	LOAD	CURRENT_STATE
-           047 : 2123;  -- 	SUB		NUM_STATE_NE_CW
-           048 : 4066;  -- 	JZERO	CALL_STATE_NE_CW
-           049 : 0916;  -- 	LOAD	CURRENT_STATE
-           04A : 2124;  -- 	SUB		NUM_STATE_E_CW
-           04B : 4068;  -- 	JZERO	CALL_STATE_E_CW
-           04C : 0916;  -- 	LOAD	CURRENT_STATE
-           04D : 2125;  -- 	SUB		NUM_STATE_SE_CW
-           04E : 406A;  -- 	JZERO	CALL_STATE_SE_CW
-           04F : 0916;  -- 	LOAD	CURRENT_STATE
-           050 : 2126;  -- 	SUB		NUM_STATE_S_CW
-           051 : 406C;  -- 	JZERO	CALL_STATE_S_CW
-           052 : 0916;  -- 	LOAD	CURRENT_STATE
-           053 : 2127;  -- 	SUB		NUM_STATE_SW_CW
-           054 : 406E;  -- 	JZERO	CALL_STATE_SW_CW
-           055 : 0916;  -- 	LOAD	CURRENT_STATE
-           056 : 2128;  -- 	SUB		NUM_STATE_NW_CW
-           057 : 4070;  -- 	JZERO	CALL_STATE_NW_CW
-           058 : 8072;  -- 	CALL 	EXE_STATE_START
-           059 : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           05A : 807A;  -- 	CALL 	EXE_STATE_NW_CCW
-           05B : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           05C : 8088;  -- 	CALL 	EXE_STATE_SW_CCW
-           05D : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           05E : 8096;  -- 	CALL 	EXE_STATE_S_CCW
-           05F : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           060 : 809E;  -- 	CALL 	EXE_STATE_SE_CCW
-           061 : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           062 : 80A6;  -- 	CALL 	EXE_STATE_E_CCW
-           063 : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           064 : 80AE;  -- 	CALL 	EXE_STATE_NE_CCW
-           065 : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           066 : 80B6;  -- 	CALL 	EXE_STATE_NE_CW
-           067 : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           068 : 80BE;  -- 	CALL 	EXE_STATE_E_CW
-           069 : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           06A : 80C7;  -- 	CALL 	EXE_STATE_SE_CW
-           06B : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           06C : 80D0;  -- 	CALL 	EXE_STATE_S_CW
-           06D : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           06E : 80D8;  -- 	CALL 	EXE_STATE_SW_CW
-           06F : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           070 : 80E1;  -- 	CALL 	EXE_STATE_NW_CW
-           071 : 2831;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
-           072 : 0916;  -- 	LOAD 	CURRENT_STATE
-           073 : 9804;  -- 	OUT 	SSEG1
-           074 : 091D;  -- 	LOAD	NUM_STATE_NW_CCW   ;;	Currently transitioning unconditionally
-           075 : 1116;  -- 	STORE	CURRENT_STATE	
-           076 : 80FC;  -- 	CALL 	getForwardDistance
-           077 : 80E9;  -- 	CALL 	moveDeciseconds
-           078 : 82A4;  -- 	CALL 	Wait1
-           079 : 8800;  -- 	RETURN
-           07A : 0916;  -- 	LOAD 	CURRENT_STATE
-           07B : 9804;  -- 	OUT 	SSEG1
-           07C : 0AE4;  -- 	LOAD 	FOUR
-           07D : 1117;  -- 	STORE	moveDeciseconds_parameter_decisecondsToMove
-           07E : 0AEB;  -- 	LOAD	MASK0
-           07F : 98B2;  -- 	OUT 	SONAREN
-           080 : 90A8;  -- 	IN		DIST0
-           081 : 9805;  -- 	OUT		SSEG2
-           082 : 6960;  -- 	ADDI	-100000					;if the wall is 1000mm away, transition
-           083 : 3085;  -- 	JNEG	GOTO_STATE_SW_CCW
-           084 : 8800;  -- 	RETURN
-           085 : 091E;  -- 		LOAD	NUM_STATE_SW_CCW
-           086 : 1116;  -- 		STORE	CURRENT_STATE	
-           087 : 8800;  -- 	RETURN
-           088 : 0916;  -- 	LOAD 	CURRENT_STATE
-           089 : 9804;  -- 	OUT 	SSEG1
-           08A : 0AE4;  -- 	LOAD 	FOUR
-           08B : 1117;  -- 	STORE	moveDeciseconds_parameter_decisecondsToMove
-           08C : 80FC;  -- 	CALL	getForwardDistance
-           08D : 0919;  -- 	LOAD	getForwardDistance_return
-           08E : 9805;  -- 	OUT		SSEG2
-           08F : 6C18;  -- 	ADDI	-1000					;if the wall is 1000mm away, transition
-           090 : 3092;  -- 	JNEG	GOTO_STATE_S_CCW
-           091 : 8800;  -- 	RETURN
-           092 : 8105;  -- 		CALL	turnLeft
-           093 : 091F;  -- 		LOAD	NUM_STATE_S_CCW
-           094 : 1116;  -- 		STORE	CURRENT_STATE	
-           095 : 8800;  -- 	RETURN
-           096 : 0916;  -- 	LOAD CURRENT_STATE
-           097 : 9804;  -- 	OUT SSEG1
-           098 : 0920;  -- 	LOAD	NUM_STATE_SE_CCW   ;;THIS IS HOW YOU TRANSITION STATES
-           099 : 1116;  -- 	STORE	CURRENT_STATE	
-           09A : 80FC;  -- 	CALL 	getForwardDistance
-           09B : 80E9;  -- 	CALL 	moveDeciseconds
-           09C : 82A4;  -- 	CALL Wait1
-           09D : 8800;  -- 	RETURN
-           09E : 0916;  -- 	LOAD CURRENT_STATE
-           09F : 9804;  -- 	OUT SSEG1
-           0A0 : 0921;  -- 	LOAD	NUM_STATE_E_CCW   ;;THIS IS HOW YOU TRANSITION STATES
-           0A1 : 1116;  -- 	STORE	CURRENT_STATE	
-           0A2 : 80FC;  -- 	CALL 	getForwardDistance
-           0A3 : 80E9;  -- 	CALL 	moveDeciseconds
-           0A4 : 82A4;  -- 	CALL Wait1
-           0A5 : 8800;  -- 	RETURN
-           0A6 : 0916;  -- 	LOAD CURRENT_STATE
-           0A7 : 9804;  -- 	OUT SSEG1
-           0A8 : 0922;  -- 	LOAD	NUM_STATE_NE_CCW   ;;THIS IS HOW YOU TRANSITION STATES
-           0A9 : 1116;  -- 	STORE	CURRENT_STATE	
-           0AA : 80FC;  -- 	CALL 	getForwardDistance
-           0AB : 80E9;  -- 	CALL 	moveDeciseconds
-           0AC : 82A4;  -- 	CALL Wait1
-           0AD : 8800;  -- 	RETURN
-           0AE : 0916;  -- 	LOAD CURRENT_STATE
-           0AF : 9804;  -- 	OUT SSEG1
-           0B0 : 0923;  -- 	LOAD	NUM_STATE_NE_CW   ;;THIS IS HOW YOU TRANSITION STATES
-           0B1 : 1116;  -- 	STORE	CURRENT_STATE	
-           0B2 : 80FC;  -- 	CALL 	getForwardDistance
-           0B3 : 80E9;  -- 	CALL 	moveDeciseconds
-           0B4 : 82A4;  -- 	CALL Wait1
-           0B5 : 8800;  -- 	RETURN
-           0B6 : 0916;  -- 	LOAD CURRENT_STATE
-           0B7 : 9804;  -- 	OUT SSEG1
-           0B8 : 0924;  -- 	LOAD	NUM_STATE_E_CW   ;;THIS IS HOW YOU TRANSITION STATES
-           0B9 : 1116;  -- 	STORE	CURRENT_STATE	
-           0BA : 80FC;  -- 	CALL 	getForwardDistance
-           0BB : 80E9;  -- 	CALL 	moveDeciseconds
-           0BC : 82A4;  -- 	CALL Wait1
-           0BD : 8800;  -- 	RETURN
-           0BE : 0916;  -- 	LOAD CURRENT_STATE
-           0BF : 9804;  -- 	OUT SSEG1
-           0C0 : 0925;  -- 	LOAD	NUM_STATE_SE_CW   ;;THIS IS HOW YOU TRANSITION STATES
-           0C1 : 1116;  -- 	STORE	CURRENT_STATE
-           0C2 : 8109;  -- 	CALL 	turnRight
-           0C3 : 80FC;  -- 	CALL 	getForwardDistance
-           0C4 : 80E9;  -- 	CALL 	moveDeciseconds
-           0C5 : 82A4;  -- 	CALL Wait1
-           0C6 : 8800;  -- 	RETURN
-           0C7 : 0916;  -- 	LOAD CURRENT_STATE
-           0C8 : 9804;  -- 	OUT SSEG1
-           0C9 : 0926;  -- 	LOAD	NUM_STATE_S_CW   ;;THIS IS HOW YOU TRANSITION STATES
-           0CA : 1116;  -- 	STORE	CURRENT_STATE	
-           0CB : 80FC;  -- 	CALL 	getForwardDistance
-           0CC : 80E9;  -- 	CALL 	moveDeciseconds
-           0CD : 8109;  -- 	CALL	turnRight
-           0CE : 82A4;  -- 	CALL Wait1
-           0CF : 8800;  -- 	RETURN
-           0D0 : 0916;  -- 	LOAD CURRENT_STATE
-           0D1 : 9804;  -- 	OUT SSEG1
-           0D2 : 0927;  -- 	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
-           0D3 : 1116;  -- 	STORE	CURRENT_STATE	
-           0D4 : 80FC;  -- 	CALL 	getForwardDistance
-           0D5 : 80E9;  -- 	CALL 	moveDeciseconds
-           0D6 : 82A4;  -- 	CALL Wait1
-           0D7 : 8800;  -- 	RETURN
-           0D8 : 0916;  -- 	LOAD CURRENT_STATE
-           0D9 : 9804;  -- 	OUT SSEG1
-           0DA : 0928;  -- 	LOAD	NUM_STATE_NW_CW   ;;THIS IS HOW YOU TRANSITION STATES
-           0DB : 1116;  -- 	STORE	CURRENT_STATE	
-           0DC : 80FC;  -- 	CALL 	getForwardDistance
-           0DD : 80E9;  -- 	CALL 	moveDeciseconds
-           0DE : 8109;  -- 	CALL 	turnRight
-           0DF : 82A4;  -- 	CALL Wait1
-           0E0 : 8800;  -- 	RETURN
-           0E1 : 0916;  -- 	LOAD CURRENT_STATE
-           0E2 : 9804;  -- 	OUT SSEG1
-           0E3 : 0927;  -- 	LOAD	NUM_STATE_SW_CW   ;;THIS IS HOW YOU TRANSITION STATES
-           0E4 : 1116;  -- 	STORE	CURRENT_STATE
-           0E5 : 80FC;  -- 	CALL 	getForwardDistance
-           0E6 : 80E9;  -- 	CALL 	moveDeciseconds
-           0E7 : 82A4;  -- 	CALL Wait1
-           0E8 : 8800;  -- 	RETURN
-           0E9 : 9802;  -- 	OUT		TIMER												;;Reset the timer
-           0EA : 0AE5;  -- 	LOAD	FIVE
-           0EB : 1118;  -- 	STORE	moveDeciseconds_local_motorRefresh					;;Store 5 as the first refresh time
-           0EC : 0AFF;  -- 	LOAD	fMid	
-           0ED : 1162;  -- 	STORE	dVel												;;Start moving
-           0EE : 9002;  -- 		IN		TIMER											;;Get the timer
-           0EF : 2117;  -- 		SUB		moveDeciseconds_parameter_decisecondsToMove
-           0F0 : 38FB;  -- 		JPOS	moveDeciseconds_exit							;;Check to see if we are done moving
-           0F1 : 9002;  -- 		IN		TIMER
-           0F2 : 2118;  -- 		SUB		moveDeciseconds_local_motorRefresh				;;Check if we need to refresh the motors
-           0F3 : 38F5;  -- 		JPOS	moveDeciseconds_refresh
-           0F4 : 28EE;  -- 		JUMP	moveDeciseconds_main	
-           0F5 : 0918;  -- 		LOAD	moveDeciseconds_local_motorRefresh
-           0F6 : 6805;  -- 		ADDI	5
-           0F7 : 1118;  -- 		STORE	moveDeciseconds_local_motorRefresh
-           0F8 : 0AFF;  -- 		LOAD	fMid
-           0F9 : 1162;  -- 		STORE	dVel											;;Move the robot at fMid
-           0FA : 28EE;  -- 		JUMP	moveDeciseconds_main
-           0FB : 8800;  -- 		RETURN
-           0FC : 0AED;  -- 	LOAD	MASK2     	;Build the mask
-           0FD : 52EE;  -- 	OR		MASK3
-           0FE : 98B2;  -- 	OUT 	SONAREN		;Enable the sonar
-           0FF : 90AA;  -- 	IN		DIST2
-           100 : 111A;  -- 	STORE	getDistanceFromHypotenus_parameter_hypotenus
-           101 : 810D;  -- 	CALL	getDistanceFromHypotenus
-           102 : 091B;  -- 	LOAD	getDistanceFromHypotenus_return
-           103 : 1119;  -- 	STORE	getForwardDistance_return
-           104 : 8800;  -- 	RETURN
-           105 : B800;  -- 	LOADI  0
-           106 : 1162;  -- 	STORE  DVel
-           107 : B85A;  -- 	LOADI  90
-           108 : 1161;  -- 	STORE  DTheta	
-           109 : B800;  -- 	LOADI  0
-           10A : 1162;  -- 	STORE  DVel
-           10B : BFA6;  -- 	LOADI  -90
-           10C : 1161;  -- 	STORE  DTheta
-           10D : 091A;  -- 	LOAD	getDistanceFromHypotenus_parameter_hypotenus
-           10E : 1236;  -- 	STORE	m16sa
-           10F : B8F6;  -- 	LOADI	246
-           110 : 1237;  -- 	STORE	m16sb
-           111 : 8213;  -- 	CALL	Mult16s
-           112 : 0A3A;  -- 	LOAD 	mres16sL
-           113 : 6018;  -- 	SHIFT	-8
-           114 : 111B;  -- 	STORE	getDistanceFromHypotenus_return
-           115 : 8800;  -- 	RETURN
-           116 : 0000;  -- CURRENT_STATE:	DW 0
-           117 : 0000;  -- moveDeciseconds_parameter_decisecondsToMove:	DW	0
-           118 : 0000;  -- moveDeciseconds_local_motorRefresh:				DW  0
+           03C : 404D;  -- 	JZERO	CALL_STATE_S_CCW
+           03D : 0914;  -- 	LOAD	CURRENT_STATE
+           03E : 2121;  -- 	SUB		NUM_STATE_E_CCW
+           03F : 404F;  -- 	JZERO	CALL_STATE_E_CCW
+           040 : 0914;  -- 	LOAD	CURRENT_STATE
+           041 : 2123;  -- 	SUB		NUM_STATE_NE_CW
+           042 : 4051;  -- 	JZERO	CALL_STATE_NE_CW
+           043 : 0914;  -- 	LOAD	CURRENT_STATE
+           044 : 2126;  -- 	SUB		NUM_STATE_S_CW
+           045 : 4053;  -- 	JZERO	CALL_STATE_S_CW
+           046 : 0914;  -- 	LOAD	CURRENT_STATE
+           047 : 2128;  -- 	SUB		NUM_STATE_NW_CW
+           048 : 4055;  -- 	JZERO	CALL_STATE_NW_CW
+           049 : 8057;  -- 	CALL 	EXE_STATE_START
+           04A : 2834;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
+           04B : 805F;  -- 	CALL 	EXE_STATE_NW_CCW
+           04C : 2834;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
+           04D : 806B;  -- 	CALL 	EXE_STATE_S_CCW
+           04E : 2834;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
+           04F : 8076;  -- 	CALL 	EXE_STATE_E_CCW
+           050 : 2834;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
+           051 : 8083;  -- 	CALL 	EXE_STATE_NE_CW
+           052 : 2834;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
+           053 : 808F;  -- 	CALL 	EXE_STATE_S_CW
+           054 : 2834;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
+           055 : 809B;  -- 	CALL 	EXE_STATE_NW_CW
+           056 : 2834;  -- 	JUMP 	MAIN_STATE_MACHINE_LOOP
+           057 : 0914;  -- 	LOAD 	CURRENT_STATE
+           058 : 9804;  -- 	OUT 	SSEG1
+           059 : 0AEA;  -- 	LOAD 	FOUR
+           05A : 1115;  -- 	STORE	moveDeciseconds_parameter_decisecondsToMove
+           05B : 80AA;  -- 	CALL 	moveDeciseconds
+           05C : 091D;  -- 	LOAD	NUM_STATE_NW_CCW
+           05D : 1114;  -- 	STORE	CURRENT_STATE	
+           05E : 8800;  -- 	RETURN
+           05F : 0914;  -- 	LOAD 	CURRENT_STATE
+           060 : 9804;  -- 	OUT 	SSEG1
+           061 : 0AEA;  -- 	LOAD 	FOUR
+           062 : 1115;  -- 	STORE	moveDeciseconds_parameter_decisecondsToMove
+           063 : 80AA;  -- 	CALL	moveDeciseconds
+           064 : 6DC0;  -- 	ADDI	-1000000
+           065 : 3067;  -- 	JNEG	GOTO_STATE_S_CCW
+           066 : 8800;  -- 	RETURN
+           067 : 80E5;  -- 		CALL turnLeft
+           068 : 091F;  -- 		LOAD	NUM_STATE_S_CCW
+           069 : 1114;  -- 		STORE	CURRENT_STATE	
+           06A : 8800;  -- 	RETURN
+           06B : 0914;  -- 	LOAD 	CURRENT_STATE
+           06C : 9804;  -- 	OUT 	SSEG1
+           06D : 0AEA;  -- 	LOAD 	FOUR
+           06E : 1115;  -- 	STORE	moveDeciseconds_parameter_decisecondsToMove
+           06F : 80AA;  -- 	CALL 	moveDeciseconds
+           070 : 6C18;  -- 	ADDI	-1000					;if the wall is 1000mm away, transition
+           071 : 3073;  -- 	JNEG	GOTO_STATE_E_CCW
+           072 : 8800;  -- 	RETURN
+           073 : 0921;  -- 		LOAD	NUM_STATE_E_CCW
+           074 : 1114;  -- 		STORE	CURRENT_STATE	
+           075 : 8800;  -- 	RETURN
+           076 : 0914;  -- 	LOAD 	CURRENT_STATE
+           077 : 9804;  -- 	OUT 	SSEG1
+           078 : 0AEA;  -- 	LOAD 	FOUR
+           079 : 1115;  -- 	STORE	moveDeciseconds_parameter_decisecondsToMove
+           07A : 80AA;  -- 	CALL	moveDeciseconds
+           07B : 6960;  -- 	ADDI	-100000
+           07C : 307E;  -- 	JNEG	GOTO_STATE_NE_CW
+           07D : 8800;  -- 	RETURN
+           07E : 80AA;  -- 		CALL 	moveDeciseconds ;;Make sure we are next to the baffle
+           07F : 80EF;  -- 		CALL 	turnAround
+           080 : 0923;  -- 		LOAD	NUM_STATE_NE_CW
+           081 : 1114;  -- 		STORE	CURRENT_STATE	
+           082 : 8800;  -- 	RETURN
+           083 : 0914;  -- 	LOAD 	CURRENT_STATE
+           084 : 9804;  -- 	OUT 	SSEG1
+           085 : 0AEA;  -- 	LOAD 	FOUR
+           086 : 1115;  -- 	STORE	moveDeciseconds_parameter_decisecondsToMove
+           087 : 80AA;  -- 	CALL	moveDeciseconds
+           088 : 6C18;  -- 	ADDI	-1000				;if infinite, transition 
+           089 : 388B;  -- 	JPOS	GOTO_STATE_S_CW
+           08A : 8800;  -- 	RETURN
+           08B : 80AA;  -- 		CALL	moveDeciseconds
+           08C : 0926;  -- 		LOAD	NUM_STATE_S_CW
+           08D : 1114;  -- 		STORE	CURRENT_STATE	
+           08E : 8800;  -- 	RETURN
+           08F : 0914;  -- 	LOAD 	CURRENT_STATE
+           090 : 9804;  -- 	OUT 	SSEG1
+           091 : 0AEA;  -- 	LOAD 	FOUR
+           092 : 1115;  -- 	STORE	moveDeciseconds_parameter_decisecondsToMove
+           093 : 80AA;  -- 	CALL	moveDeciseconds
+           094 : 6C18;  -- 	ADDI	-1000					;if the wall is 1000mm away, transition
+           095 : 3097;  -- 	JNEG	GOTO_STATE_NW_CW
+           096 : 8800;  -- 	RETURN
+           097 : 80EA;  -- 		CALL 	turnRight
+           098 : 0928;  -- 		LOAD	NUM_STATE_NW_CW
+           099 : 1114;  -- 		STORE	CURRENT_STATE	
+           09A : 8800;  -- 	RETURN
+           09B : 0914;  -- 	LOAD CURRENT_STATE
+           09C : 9804;  -- 	OUT SSEG1
+           09D : 0AEA;  -- 	LOAD 	FOUR
+           09E : 1115;  -- 	STORE	moveDeciseconds_parameter_decisecondsToMove
+           09F : 80AA;  -- 	CALL	moveDeciseconds
+           0A0 : 6960;  -- 	ADDI	-100000					;if the wall is 1000mm away, transition
+           0A1 : 30A3;  -- 	JNEG	GOTO_STATE_NW_CCW		
+           0A2 : 8800;  -- 	RETURN
+           0A3 : 0AEA;  -- 		LOAD 	FOUR
+           0A4 : 1115;  -- 		STORE	moveDeciseconds_parameter_decisecondsToMove
+           0A5 : 80AA;  -- 		CALL	moveDeciseconds
+           0A6 : 80EF;  -- 		CALL	turnAround
+           0A7 : 091D;  -- 		LOAD	NUM_STATE_NW_CCW
+           0A8 : 1114;  -- 		STORE	CURRENT_STATE	
+           0A9 : 8800;  -- 	RETURN
+           0AA : 9802;  -- 	OUT		TIMER												;;Reset the timer
+           0AB : 0AEB;  -- 	LOAD	FIVE
+           0AC : 1116;  -- 	STORE	moveDeciseconds_local_motorRefresh					;;Store 5 as the first refresh time
+           0AD : 0B05;  -- 	LOAD	fMid	
+           0AE : 1162;  -- 	STORE	dVel												;;Start moving
+           0AF : 9002;  -- 		IN		TIMER											;;Get the timer
+           0B0 : 2115;  -- 		SUB		moveDeciseconds_parameter_decisecondsToMove
+           0B1 : 38BC;  -- 		JPOS	moveDeciseconds_exit							;;Check to see if we are done moving
+           0B2 : 9002;  -- 		IN		TIMER
+           0B3 : 2116;  -- 		SUB		moveDeciseconds_local_motorRefresh				;;Check if we need to refresh the motors
+           0B4 : 38B6;  -- 		JPOS	moveDeciseconds_refresh
+           0B5 : 28AF;  -- 		JUMP	moveDeciseconds_main	
+           0B6 : 0916;  -- 		LOAD	moveDeciseconds_local_motorRefresh
+           0B7 : 6805;  -- 		ADDI	5
+           0B8 : 1116;  -- 		STORE	moveDeciseconds_local_motorRefresh
+           0B9 : 0B05;  -- 		LOAD	fMid
+           0BA : 1162;  -- 		STORE	dVel											;;Move the robot at fMid
+           0BB : 28AF;  -- 		JUMP	moveDeciseconds_main
+           0BC : 8800;  -- 		RETURN
+           0BD : 0AF3;  -- 	LOAD	MASK2     	;Build the mask
+           0BE : 52F4;  -- 	OR		MASK3
+           0BF : 98B2;  -- 	OUT 	SONAREN		;Enable the sonar
+           0C0 : B800;  -- 	LOADI	0
+           0C1 : 1162;  -- 	STORE	Dvel
+           0C2 : B81E;  -- 	LOADI	30
+           0C3 : 9804;  -- 	OUT		SSEG1
+           0C4 : 1118;  -- 	STORE	getForwardDistance_local_currentTheta
+           0C5 : 1161;  -- 	STORE	DTheta		;;Turn 30 degrees left
+           0C6 : 82AA;  -- 	CALL	WaitPoint2
+           0C7 : 0918;  -- 		LOAD	getForwardDistance_local_currentTheta
+           0C8 : 9804;  -- 		OUT		SSEG1
+           0C9 : 681E;  -- 		ADDI	30
+           0CA : 40DD;  -- 		JZERO	getForwardDistance_returnMin
+           0CB : 08AA;  -- 		LOAD	DIST2
+           0CC : 2117;  -- 		SUB		getForwardDistance_local_minDistance
+           0CD : 38D0;  -- 		JPOS	getForwardDistance_check3
+           0CE : 08AA;  -- 		LOAD	DIST2
+           0CF : 1117;  -- 		STORE	getForwardDistance_local_minDistance
+           0D0 : 08AB;  -- 		LOAD	DIST3
+           0D1 : 2117;  -- 		SUB		getForwardDistance_local_minDistance
+           0D2 : 38D5;  -- 		JPOS	getForwardDistance_scanTurn
+           0D3 : 08AB;  -- 		LOAD	DIST3
+           0D4 : 1117;  -- 		STORE	getForwardDistance_local_minDistance		
+           0D5 : B800;  -- 			LOADI	0
+           0D6 : 1162;  -- 			STORE	Dvel
+           0D7 : BFF6;  -- 			LOADI	-10
+           0D8 : 1161;  -- 			STORE	DTheta
+           0D9 : 82AA;  -- 			CALL	WaitPoint2
+           0DA : 0918;  -- 			LOAD	getForwardDistance_local_currentTheta
+           0DB : 6FF6;  -- 			ADDI	-10
+           0DC : 28C7;  -- 			JUMP	getForwardDistance_scanLoop
+           0DD : 0917;  -- 		LOAD	getForwardDistance_local_minDistance
+           0DE : 1119;  -- 		STORE	getForwardDistance_return
+           0DF : B800;  -- 		LOADI	0
+           0E0 : 1162;  -- 		STORE	Dvel
+           0E1 : B81E;  -- 		LOADI 	30
+           0E2 : 1161;  -- 		STORE	DTheta
+           0E3 : 82AA;  -- 		CALL	WaitPoint2
+           0E4 : 8800;  -- 		RETURN
+           0E5 : B800;  -- 	LOADI  0
+           0E6 : 1162;  -- 	STORE  DVel
+           0E7 : B85A;  -- 	LOADI  90
+           0E8 : 1161;  -- 	STORE  DTheta	
+           0E9 : 8800;  -- 	RETURN
+           0EA : B800;  -- 	LOADI  0
+           0EB : 1162;  -- 	STORE  DVel
+           0EC : BFA6;  -- 	LOADI  -90
+           0ED : 1161;  -- 	STORE  DTheta
+           0EE : 8800;  -- 	RETURn
+           0EF : B800;  -- 	LOADI  0
+           0F0 : 1162;  -- 	STORE  DVel
+           0F1 : B8B4;  -- 	LOADI  180
+           0F2 : 1161;  -- 	STORE  DTheta
+           0F3 : 8800;  -- 	RETURN
+           0F4 : 9802;  -- 	OUT TIMER
+           0F5 : 0AE6;  -- 	LOAD ZERO	
+           0F6 : 692C;  -- 	ADDI 300
+           0F7 : 988B;  -- 	OUT RVELCMD ;;LEFT WHEEL GOES 1MM/SEC
+           0F8 : 0AE6;  -- 	LOAD ZERO
+           0F9 : 6896;  -- 	ADDI 150
+           0FA : 9883;  -- 	OUT LVELCMD ;;RIGHT WHEEL GOES 2MM/SEC
+           0FB : 9002;  -- 	IN TIMER  ;;CHECK TIMER
+           0FC : 9805;  -- 	OUT SSEG2
+           0FD : 6FF6;  -- 	ADDI -10
+           0FE : 30F5;  -- 	JNEG wobble_Left ;;HAS 1 SECONDS PASSED?
+           0FF : 9802;  -- 	OUT TIMER    ;;RESET TIMER
+           100 : 0AE6;  -- 	LOAD ZERO
+           101 : 692C;  -- 	ADDI 300
+           102 : 9883;  -- 	OUT LVELCMD ;;RIGHT WHEEL GOES 1MM/SEC
+           103 : 0AE6;  -- 	LOAD ZERO
+           104 : 6896;  -- 	ADDI 150
+           105 : 988B;  -- 	OUT RVELCMD ;;LEFT WHEEL GOES 2MM/SEC
+           106 : 9002;  -- 	IN TIMER
+           107 : 9805;  -- 	OUT SSEG2
+           108 : 6FF6;  -- 	ADDI -10
+           109 : 3100;  -- 	JNEG wobble_Right
+           10A : 28F4;  -- JUMP wobble
+           10B : 091A;  -- 	LOAD	getDistanceFromHypotenus_parameter_hypotenus
+           10C : 1236;  -- 	STORE	m16sa
+           10D : B8F6;  -- 	LOADI	246
+           10E : 1237;  -- 	STORE	m16sb
+           10F : 8213;  -- 	CALL	Mult16s
+           110 : 0A3A;  -- 	LOAD 	mres16sL
+           111 : 6018;  -- 	SHIFT	-8
+           112 : 111B;  -- 	STORE	getDistanceFromHypotenus_return
+           113 : 8800;  -- 	RETURN
+           114 : 0000;  -- CURRENT_STATE:	DW 0
+           115 : 0000;  -- moveDeciseconds_parameter_decisecondsToMove:	DW	0
+           116 : 0000;  -- moveDeciseconds_local_motorRefresh:				DW  0
+           117 : 0000;  -- getForwardDistance_local_minDistance:			DW	0
+           118 : 0000;  -- getForwardDistance_local_currentTheta:			DW  0
            119 : 0000;  -- getForwardDistance_return:						DW	0
            11A : 0000;  -- getDistanceFromHypotenus_parameter_hypotenus:	DW  0
            11B : 0000;  -- getDistanceFromHypotenus_return:				DW	0
@@ -309,11 +309,11 @@ CONTENT
            128 : 000C;  -- NUM_STATE_NW_CW:	DW 12
            129 : B800;  -- 	LOADI  0
            12A : 1161;  -- 	STORE  DTheta      ; Desired angle 0
-           12B : 0AFF;  -- 	LOAD   FMid        ; Defined below as 350.
+           12B : 0B05;  -- 	LOAD   FMid        ; Defined below as 350.
            12C : 1162;  -- 	STORE  DVel        ; Desired forward velocity
            12D : 90C0;  -- 	IN     XPOS        ; X position from odometry
            12E : 9806;  -- 	OUT    LCD         ; Display X position for debugging
-           12F : 22F5;  -- 	SUB    OneMeter    ; Defined below as the robot units for 1 m
+           12F : 22FB;  -- 	SUB    OneMeter    ; Defined below as the robot units for 1 m
            130 : 312D;  -- 	JNEG   Test1       ; Not there yet, keep checking
            131 : B800;  -- 	LOADI  0
            132 : 1162;  -- 	STORE  DVel
@@ -324,13 +324,13 @@ CONTENT
            137 : 9806;  -- 	OUT    LCD         ; Display |angle error| for debugging
            138 : 6FFB;  -- 	ADDI   -5          ; check if within 5 degrees of target angle
            139 : 3935;  -- 	JPOS   Test2       ; if not, keep testing
-           13A : 0AFD;  -- 	LOAD   FSlow       ; defined below as 100
+           13A : 0B03;  -- 	LOAD   FSlow       ; defined below as 100
            13B : 1162;  -- 	STORE  DVel
            13C : 90C1;  -- 	IN     YPOS        ; get the Y position from odometry
-           13D : 22F5;  -- 	SUB    OneMeter
+           13D : 22FB;  -- 	SUB    OneMeter
            13E : 9806;  -- 	OUT    LCD         ; Display distance error for debugging
            13F : 313C;  -- 	JNEG   Test3       ; if not there, keep testing
-           140 : 0B01;  -- 	LOAD   FFast       ; defined below as 500
+           140 : 0B07;  -- 	LOAD   FFast       ; defined below as 500
            141 : 1162;  -- 	STORE  DVel
            142 : 90C0;  -- 	IN     XPOS        ; get the X position from odometry
            143 : 81AB;  -- 	CALL   Neg         ; negate
@@ -347,13 +347,13 @@ CONTENT
            14E : 12A0;  -- 	STORE  L2Y
            14F : 8275;  -- 	CALL   L2Estimate
            150 : 9805;  -- 	OUT    SSEG2       ; Display distance for debugging
-           151 : 22F8;  -- 	SUB    OneFoot
+           151 : 22FE;  -- 	SUB    OneFoot
            152 : 3942;  -- 	JPOS   GoTo00      ; If >1 ft from destination, continue
            153 : B800;  -- 	LOADI  0
            154 : 1162;  -- 	STORE  DVel
            155 : 2956;  -- 	JUMP   Die
            156 : A00F;  -- 	CLI    &B1111      ; disable all interrupts
-           157 : 0AE0;  -- 	LOAD   Zero        ; Stop everything.
+           157 : 0AE6;  -- 	LOAD   Zero        ; Stop everything.
            158 : 9883;  -- 	OUT    LVELCMD
            159 : 988B;  -- 	OUT    RVELCMD
            15A : 98B2;  -- 	OUT    SONAREN
@@ -437,7 +437,7 @@ CONTENT
            1A8 : 31A7;  -- 	JNEG   M360N
            1A9 : 8800;  -- 	RETURN
            1AA : 39AD;  -- 	JPOS   Abs_r
-           1AB : 5ADF;  -- 	XOR    NegOne       ; Flip all bits
+           1AB : 5AE5;  -- 	XOR    NegOne       ; Flip all bits
            1AC : 6801;  -- 	ADDI   1            ; Add one (i.e. negate number)
            1AD : 8800;  -- 	RETURN
            1AE : 0A0E;  -- 	LOAD   AtanY
@@ -498,7 +498,7 @@ CONTENT
            1E5 : 81F1;  -- 	CALL   A2_mult      ; convert to degrees
            1E6 : 1210;  -- 	STORE  AtanT
            1E7 : 6017;  -- 	SHIFT  -7           ; check 7th bit
-           1E8 : 4AE1;  -- 	AND    One
+           1E8 : 4AE7;  -- 	AND    One
            1E9 : 41EE;  -- 	JZERO  A2_rdwn      ; round down
            1EA : 0A10;  -- 	LOAD   AtanT
            1EB : 6018;  -- 	SHIFT  -8
@@ -513,7 +513,7 @@ CONTENT
            1F4 : 123B;  -- 	STORE  mres16sH
            1F5 : 0A3A;  -- 	LOAD   mres16sL
            1F6 : 6018;  -- 	SHIFT  -8           ; move low word of result down 8 bits
-           1F7 : 4AF3;  -- 	AND    LowByte
+           1F7 : 4AF9;  -- 	AND    LowByte
            1F8 : 523B;  -- 	OR     mres16sH     ; combine high and low words of result
            1F9 : 8800;  -- 	RETURN
            1FA : B809;  -- 	LOADI  9            ; loop 8 times (256 = 2^8)
@@ -552,7 +552,7 @@ CONTENT
            21B : 1A36;  -- 	ADD    m16sA        ;  add multiplicand to result H
            21C : 123B;  -- 	STORE  mres16sH
            21D : 0A37;  -- 	LOAD   m16sB
-           21E : 4AE1;  -- 	AND    One          ; check bit 0 of multiplier
+           21E : 4AE7;  -- 	AND    One          ; check bit 0 of multiplier
            21F : 1238;  -- 	STORE  m16sc        ; save as next carry
            220 : 4224;  -- 	JZERO  Mult16s_sh   ; if no carry, move on to shift
            221 : 0A3B;  -- 	LOAD   mres16sH     ; if bit 0 set,
@@ -598,7 +598,7 @@ CONTENT
            249 : 126D;  -- 	STORE  d16sN
            24A : 0A6D;  -- 	LOAD   d16sN
            24B : 601F;  -- 	SHIFT  -15          ; get msb
-           24C : 4AE1;  -- 	AND    One          ; only msb (because shift is arithmetic)
+           24C : 4AE7;  -- 	AND    One          ; only msb (because shift is arithmetic)
            24D : 1272;  -- 	STORE  d16sC2       ; store as carry
            24E : 0A6D;  -- 	LOAD   d16sN
            24F : 6001;  -- 	SHIFT  1            ; shift <<1
@@ -656,7 +656,7 @@ CONTENT
            283 : 12A2;  -- 	STORE  L2T2
            284 : 0A3A;  -- 	LOAD   mres16sL
            285 : 6018;  -- 	SHIFT  -8        ; / 256
-           286 : 4AF3;  -- 	AND    LowByte
+           286 : 4AF9;  -- 	AND    LowByte
            287 : 52A2;  -- 	OR     L2T2
            288 : 12A3;  -- 	STORE  L2T3
            289 : 0AA1;  -- 	LOAD   L2T1
@@ -669,7 +669,7 @@ CONTENT
            290 : 12A2;  -- 	STORE  L2T2
            291 : 0A3A;  -- 	LOAD   mres16sL
            292 : 6018;  -- 	SHIFT  -8        ; / 256
-           293 : 4AF3;  -- 	AND    LowByte
+           293 : 4AF9;  -- 	AND    LowByte
            294 : 52A2;  -- 	OR     L2T2
            295 : 1AA3;  -- 	ADD    L2T3     ; sum
            296 : 8800;  -- 	RETURN
@@ -692,96 +692,102 @@ CONTENT
            2A7 : 6FF6;  -- 	ADDI   -10         ; 1 second at 10Hz.
            2A8 : 32A5;  -- 	JNEG   Wloop
            2A9 : 8800;  -- 	RETURN
-           2AA : 82C2;  -- 	CALL   GetBattLvl
-           2AB : 42AA;  -- 	JZERO  BattCheck   ; A/D hasn't had time to initialize
-           2AC : 2303;  -- 	SUB    MinBatt
-           2AD : 32B0;  -- 	JNEG   DeadBatt
-           2AE : 1B03;  -- 	ADD    MinBatt     ; get original value back
+           2AA : 9802;  -- 	OUT    TIMER
+           2AB : 9002;  -- 	IN     TIMER
+           2AC : 9807;  -- 	OUT    XLEDS       ; User-feedback that a pause is occurring.
+           2AD : 6FFE;  -- 	ADDI   -2         ; 1 second at 10Hz.
+           2AE : 32AB;  -- 	JNEG   W2loop
            2AF : 8800;  -- 	RETURN
-           2B0 : B820;  -- 	LOADI  &H20
-           2B1 : 980A;  -- 	OUT    BEEP        ; start beep sound
-           2B2 : 82C2;  -- 	CALL   GetBattLvl  ; get the battery level
-           2B3 : 9804;  -- 	OUT    SSEG1       ; display it everywhere
-           2B4 : 9805;  -- 	OUT    SSEG2
-           2B5 : 9806;  -- 	OUT    LCD
-           2B6 : 0AE0;  -- 	LOAD   Zero
-           2B7 : 6FFF;  -- 	ADDI   -1          ; 0xFFFF
-           2B8 : 9801;  -- 	OUT    LEDS        ; all LEDs on
-           2B9 : 9807;  -- 	OUT    XLEDS
-           2BA : 82A4;  -- 	CALL   Wait1       ; 1 second
-           2BB : B940;  -- 	LOADI  &H140       ; short, high-pitched beep
-           2BC : 980A;  -- 	OUT    BEEP        ; stop beeping
-           2BD : 0AE0;  -- 	LOAD   Zero
-           2BE : 9801;  -- 	OUT    LEDS        ; LEDs off
+           2B0 : 82C8;  -- 	CALL   GetBattLvl
+           2B1 : 42B0;  -- 	JZERO  BattCheck   ; A/D hasn't had time to initialize
+           2B2 : 2309;  -- 	SUB    MinBatt
+           2B3 : 32B6;  -- 	JNEG   DeadBatt
+           2B4 : 1B09;  -- 	ADD    MinBatt     ; get original value back
+           2B5 : 8800;  -- 	RETURN
+           2B6 : B820;  -- 	LOADI  &H20
+           2B7 : 980A;  -- 	OUT    BEEP        ; start beep sound
+           2B8 : 82C8;  -- 	CALL   GetBattLvl  ; get the battery level
+           2B9 : 9804;  -- 	OUT    SSEG1       ; display it everywhere
+           2BA : 9805;  -- 	OUT    SSEG2
+           2BB : 9806;  -- 	OUT    LCD
+           2BC : 0AE6;  -- 	LOAD   Zero
+           2BD : 6FFF;  -- 	ADDI   -1          ; 0xFFFF
+           2BE : 9801;  -- 	OUT    LEDS        ; all LEDs on
            2BF : 9807;  -- 	OUT    XLEDS
            2C0 : 82A4;  -- 	CALL   Wait1       ; 1 second
-           2C1 : 2AB0;  -- 	JUMP   DeadBatt    ; repeat forever
-           2C2 : 0B05;  -- 	LOAD   I2CRCmd     ; 0x0190 (write 0B, read 1B, addr 0x90)
-           2C3 : 9890;  -- 	OUT    I2C_CMD     ; to I2C_CMD
-           2C4 : 9892;  -- 	OUT    I2C_RDY     ; start the communication
-           2C5 : 82D0;  -- 	CALL   BlockI2C    ; wait for it to finish
-           2C6 : 9091;  -- 	IN     I2C_DATA    ; get the returned data
-           2C7 : 8800;  -- 	RETURN
-           2C8 : 82D0;  -- 	CALL   BlockI2C    ; wait for idle
-           2C9 : 0B04;  -- 	LOAD   I2CWCmd     ; 0x1190 (write 1B, read 1B, addr 0x90)
-           2CA : 9890;  -- 	OUT    I2C_CMD     ; to I2C_CMD register
-           2CB : 0AE0;  -- 	LOAD   Zero        ; 0x0000 (A/D port 0, no increment)
-           2CC : 9891;  -- 	OUT    I2C_DATA    ; to I2C_DATA register
-           2CD : 9892;  -- 	OUT    I2C_RDY     ; start the communication
-           2CE : 82D0;  -- 	CALL   BlockI2C    ; wait for it to finish
-           2CF : 8800;  -- 	RETURN
-           2D0 : 0AE0;  -- 	LOAD   Zero
-           2D1 : 12DE;  -- 	STORE  Temp        ; Used to check for timeout
-           2D2 : 0ADE;  -- 	LOAD   Temp
-           2D3 : 6801;  -- 	ADDI   1           ; this will result in ~0.1s timeout
-           2D4 : 12DE;  -- 	STORE  Temp
-           2D5 : 42D9;  -- 	JZERO  I2CError    ; Timeout occurred; error
-           2D6 : 9092;  -- 	IN     I2C_RDY     ; Read busy signal
-           2D7 : 3AD2;  -- 	JPOS   BI2CL       ; If not 0, try again
-           2D8 : 8800;  -- 	RETURN             ; Else return
-           2D9 : 0AE0;  -- 	LOAD   Zero
-           2DA : 692C;  -- 	ADDI   &H12C       ; "I2C"
-           2DB : 9804;  -- 	OUT    SSEG1
-           2DC : 9805;  -- 	OUT    SSEG2       ; display error message
-           2DD : 2AD9;  -- 	JUMP   I2CError
-           2DE : 0000;  -- Temp:     DW 0 ; "Temp" is not a great name, but can be useful
-           2DF : FFFF;  -- NegOne:   DW -1
-           2E0 : 0000;  -- Zero:     DW 0
-           2E1 : 0001;  -- One:      DW 1
-           2E2 : 0002;  -- Two:      DW 2
-           2E3 : 0003;  -- Three:    DW 3
-           2E4 : 0004;  -- Four:     DW 4
-           2E5 : 0005;  -- Five:     DW 5
-           2E6 : 0006;  -- Six:      DW 6
-           2E7 : 0007;  -- Seven:    DW 7
-           2E8 : 0008;  -- Eight:    DW 8
-           2E9 : 0009;  -- Nine:     DW 9
-           2EA : 000A;  -- Ten:      DW 10
-           2EB : 0001;  -- Mask0:    DW &B00000001
-           2EC : 0002;  -- Mask1:    DW &B00000010
-           2ED : 0004;  -- Mask2:    DW &B00000100
-           2EE : 0008;  -- Mask3:    DW &B00001000
-           2EF : 0010;  -- Mask4:    DW &B00010000
-           2F0 : 0020;  -- Mask5:    DW &B00100000
-           2F1 : 0040;  -- Mask6:    DW &B01000000
-           2F2 : 0080;  -- Mask7:    DW &B10000000
-           2F3 : 00FF;  -- LowByte:  DW &HFF      ; binary 00000000 1111111
-           2F4 : 000F;  -- LowNibl:  DW &HF       ; 0000 0000 0000 1111
-           2F5 : 03C1;  -- OneMeter: DW 961       ; ~1m in 1.04mm units
-           2F6 : 01E1;  -- HalfMeter: DW 481      ; ~0.5m in 1.04mm units
-           2F7 : 024A;  -- TwoFeet:  DW 586       ; ~2ft in 1.04mm units
-           2F8 : 0125;  -- OneFoot:  DW 293       ; ~2ft in 1.04mm units
-           2F9 : 005A;  -- Deg90:    DW 90        ; 90 degrees in odometer units
-           2FA : 00B4;  -- Deg180:   DW 180       ; 180
-           2FB : 010E;  -- Deg270:   DW 270       ; 270
-           2FC : 0168;  -- Deg360:   DW 360       ; can never actually happen; for math only
-           2FD : 0064;  -- FSlow:    DW 100       ; 100 is about the lowest velocity value that will move
-           2FE : FF9C;  -- RSlow:    DW -100
-           2FF : 015E;  -- FMid:     DW 350       ; 350 is a medium speed
-           300 : FEA2;  -- RMid:     DW -350
-           301 : 01F4;  -- FFast:    DW 500       ; 500 is almost max speed (511 is max)
-           302 : FE0C;  -- RFast:    DW -500
-           303 : 008C;  -- MinBatt:  DW 140       ; 14.0V - minimum safe battery voltage
-           304 : 1190;  -- I2CWCmd:  DW &H1190    ; write one i2c byte, read one byte, addr 0x90
-           305 : 0190;  -- I2CRCmd:  DW &H0190    ; write nothing, read one byte, addr 0x90
+           2C1 : B940;  -- 	LOADI  &H140       ; short, high-pitched beep
+           2C2 : 980A;  -- 	OUT    BEEP        ; stop beeping
+           2C3 : 0AE6;  -- 	LOAD   Zero
+           2C4 : 9801;  -- 	OUT    LEDS        ; LEDs off
+           2C5 : 9807;  -- 	OUT    XLEDS
+           2C6 : 82A4;  -- 	CALL   Wait1       ; 1 second
+           2C7 : 2AB6;  -- 	JUMP   DeadBatt    ; repeat forever
+           2C8 : 0B0B;  -- 	LOAD   I2CRCmd     ; 0x0190 (write 0B, read 1B, addr 0x90)
+           2C9 : 9890;  -- 	OUT    I2C_CMD     ; to I2C_CMD
+           2CA : 9892;  -- 	OUT    I2C_RDY     ; start the communication
+           2CB : 82D6;  -- 	CALL   BlockI2C    ; wait for it to finish
+           2CC : 9091;  -- 	IN     I2C_DATA    ; get the returned data
+           2CD : 8800;  -- 	RETURN
+           2CE : 82D6;  -- 	CALL   BlockI2C    ; wait for idle
+           2CF : 0B0A;  -- 	LOAD   I2CWCmd     ; 0x1190 (write 1B, read 1B, addr 0x90)
+           2D0 : 9890;  -- 	OUT    I2C_CMD     ; to I2C_CMD register
+           2D1 : 0AE6;  -- 	LOAD   Zero        ; 0x0000 (A/D port 0, no increment)
+           2D2 : 9891;  -- 	OUT    I2C_DATA    ; to I2C_DATA register
+           2D3 : 9892;  -- 	OUT    I2C_RDY     ; start the communication
+           2D4 : 82D6;  -- 	CALL   BlockI2C    ; wait for it to finish
+           2D5 : 8800;  -- 	RETURN
+           2D6 : 0AE6;  -- 	LOAD   Zero
+           2D7 : 12E4;  -- 	STORE  Temp        ; Used to check for timeout
+           2D8 : 0AE4;  -- 	LOAD   Temp
+           2D9 : 6801;  -- 	ADDI   1           ; this will result in ~0.1s timeout
+           2DA : 12E4;  -- 	STORE  Temp
+           2DB : 42DF;  -- 	JZERO  I2CError    ; Timeout occurred; error
+           2DC : 9092;  -- 	IN     I2C_RDY     ; Read busy signal
+           2DD : 3AD8;  -- 	JPOS   BI2CL       ; If not 0, try again
+           2DE : 8800;  -- 	RETURN             ; Else return
+           2DF : 0AE6;  -- 	LOAD   Zero
+           2E0 : 692C;  -- 	ADDI   &H12C       ; "I2C"
+           2E1 : 9804;  -- 	OUT    SSEG1
+           2E2 : 9805;  -- 	OUT    SSEG2       ; display error message
+           2E3 : 2ADF;  -- 	JUMP   I2CError
+           2E4 : 0000;  -- Temp:     DW 0 ; "Temp" is not a great name, but can be useful
+           2E5 : FFFF;  -- NegOne:   DW -1
+           2E6 : 0000;  -- Zero:     DW 0
+           2E7 : 0001;  -- One:      DW 1
+           2E8 : 0002;  -- Two:      DW 2
+           2E9 : 0003;  -- Three:    DW 3
+           2EA : 0004;  -- Four:     DW 4
+           2EB : 0005;  -- Five:     DW 5
+           2EC : 0006;  -- Six:      DW 6
+           2ED : 0007;  -- Seven:    DW 7
+           2EE : 0008;  -- Eight:    DW 8
+           2EF : 0009;  -- Nine:     DW 9
+           2F0 : 000A;  -- Ten:      DW 10
+           2F1 : 0001;  -- Mask0:    DW &B00000001
+           2F2 : 0002;  -- Mask1:    DW &B00000010
+           2F3 : 0004;  -- Mask2:    DW &B00000100
+           2F4 : 0008;  -- Mask3:    DW &B00001000
+           2F5 : 0010;  -- Mask4:    DW &B00010000
+           2F6 : 0020;  -- Mask5:    DW &B00100000
+           2F7 : 0040;  -- Mask6:    DW &B01000000
+           2F8 : 0080;  -- Mask7:    DW &B10000000
+           2F9 : 00FF;  -- LowByte:  DW &HFF      ; binary 00000000 1111111
+           2FA : 000F;  -- LowNibl:  DW &HF       ; 0000 0000 0000 1111
+           2FB : 03C1;  -- OneMeter: DW 961       ; ~1m in 1.04mm units
+           2FC : 01E1;  -- HalfMeter: DW 481      ; ~0.5m in 1.04mm units
+           2FD : 024A;  -- TwoFeet:  DW 586       ; ~2ft in 1.04mm units
+           2FE : 0125;  -- OneFoot:  DW 293       ; ~2ft in 1.04mm units
+           2FF : 005A;  -- Deg90:    DW 90        ; 90 degrees in odometer units
+           300 : 00B4;  -- Deg180:   DW 180       ; 180
+           301 : 010E;  -- Deg270:   DW 270       ; 270
+           302 : 0168;  -- Deg360:   DW 360       ; can never actually happen; for math only
+           303 : 0064;  -- FSlow:    DW 100       ; 100 is about the lowest velocity value that will move
+           304 : FF9C;  -- RSlow:    DW -100
+           305 : 015E;  -- FMid:     DW 350       ; 350 is a medium speed
+           306 : FEA2;  -- RMid:     DW -350
+           307 : 01F4;  -- FFast:    DW 500       ; 500 is almost max speed (511 is max)
+           308 : FE0C;  -- RFast:    DW -500
+           309 : 008C;  -- MinBatt:  DW 140       ; 14.0V - minimum safe battery voltage
+           30A : 1190;  -- I2CWCmd:  DW &H1190    ; write one i2c byte, read one byte, addr 0x90
+           30B : 0190;  -- I2CRCmd:  DW &H0190    ; write nothing, read one byte, addr 0x90
   END;
