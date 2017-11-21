@@ -60,6 +60,98 @@ WaitForUser:
 	JPOS   WaitForUser ; not ready (KEYs are active-low, hence JPOS)
 	LOAD   Zero
 	OUT    XLEDS       ; clear LEDs once ready to continue
+	
+	
+;;LAN DID THIS...
+;;VARIABLES
+baffleside:	DW	15
+baffletop:	DW	8
+
+;;OddBots Subroutine -------------------------------------------------
+main_oddbots:
+	OUT    RESETPOS    ; reset odometer in case wheels moved after programming
+	
+	; configure timer interrupts to enable the movement control code
+	LOADI  10          ; fire at 10 Hz (10 ms * 10).
+	OUT    CTIMER      ; turn on timer peripheral
+	SEI    &B0010      ; enable interrupts from source 2 (timer)
+	
+;;start moving straight along left side of baffle
+	CALL 	moveOneFoot
+	CALL	moveOneFoot
+	
+main_loop:
+	CALL	moveAlongSide
+	CALL	turnLeft
+	CALL	moveAlongTop
+	CALL	turnLeft
+	CALL	moveAlongSide
+	CALL	turnAround
+	
+	CALL	moveAlongSide
+	CALL	turnRight
+	CALL	moveAlongTop
+	CALL 	turnRight
+	CALL	moveALongSide
+	CALL	turnAround
+	
+	JUMP	main_loop		;;start all over
+	
+moveAlongSide:
+	LOAD	baffleside
+	CALL	moveHalfFoot
+	;;SCAN
+	SUB		ONE
+	JNEG	moveAlongSide
+	RETURN		;;jump out of loop
+moveAlongTop:
+	LOAD	baffletop
+	CALL	moveHalfFoot
+	;;SCAN
+	SUB		ONE
+	JNEG	moveAlongTop
+	RETURN
+moveHalfFoot:
+	OUT 	RESETPOS
+moveHalfFootLoop:
+	LOADI 	0
+	STORE 	DTheta
+	LOAD	Fmid
+	STORE	DVel
+	IN		XPOS
+	SUB		HalfFoot
+	JNEG	moveHalfFootLoop
+	RETURN
+moveOneFoot:
+	OUT 	RESETPOS
+moveOneFootLoop:
+	LOADI 	0
+	STORE 	DTheta
+	LOAD	Fmid
+	STORE	DVel
+	IN		XPOS
+	SUB		OneFoot
+	JNEG	moveOneFootLoop
+	RETURN
+stop:
+	LOAD	0
+	STORE	Dvel
+	RETURN
+turnRight:
+	OUT		RESETPOS
+	LOADI	-90
+	STORE	DTheta
+	RETURN
+turnLeft:
+	OUT		RESETPOS
+	LOADI	90
+	STORE	DTheta
+	RETURN
+turnAround:
+	OUT		RESETPOS
+	LOADI	180
+	STORE	DTheta	
+	RETURN
 
 ;***************************************************************
 ;* Main code
@@ -76,7 +168,8 @@ Main:
 	; If you want to take manual control of the robot,
 	; execute CLI &B0010 to disable the timer interrupt.
 	
-
+	endcode:
+		JUMP	main_oddbots
 ; As a quick demo of the movement control, the robot is 
 ; directed to
 ; - move forward ~1 m at a medium speed,
@@ -90,8 +183,7 @@ Main:
 	STORE  DVel        ; Desired forward velocity
 	; The robot should automatically start moving,
 	; trying to match these desired parameters, because
-	; the movement API is active.
-	
+	; the movement API is active
 Test1:  ; P.S. "Test1" is a terrible, non-descriptive label
 	IN     XPOS        ; X position from odometry
 	OUT    LCD         ; Display X position for debugging
@@ -771,8 +863,11 @@ LowNibl:  DW &HF       ; 0000 0000 0000 1111
 ; some useful movement values
 OneMeter: DW 961       ; ~1m in 1.04mm units
 HalfMeter: DW 481      ; ~0.5m in 1.04mm units
+QuarterMeter:	DW	241
+QuarterFoot:	DW	64
+HalfFoot:	DW	127
 TwoFeet:  DW 586       ; ~2ft in 1.04mm units
-OneFoot:  DW 293       ; ~2ft in 1.04mm units
+OneFoot:  DW 293       ; ~1ft in 1.04mm units
 Deg90:    DW 90        ; 90 degrees in odometer units
 Deg180:   DW 180       ; 180
 Deg270:   DW 270       ; 270

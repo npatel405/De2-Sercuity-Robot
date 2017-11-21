@@ -570,23 +570,16 @@ getForwardDistance:
 	
 ;; turn inbetween states
 turnLeft:
-	LOADI  0
-	STORE  DVel
 	LOADI  90
 	STORE  DTheta	
 	RETURN
 	
 turnRight:
-	LOADI  0
-	STORE  DVel
 	LOADI  -90
 	STORE  DTheta
 	RETURn
 	
-turnAround:
-	LOADI  0
-	STORE  DVel
-	LOADI  180
+turnAround:	LOADI  180
 	STORE  DTheta
 	RETURN
 ;;Nick's wobble...
